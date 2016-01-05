@@ -726,6 +726,7 @@ struct btrfs_delayed_root;
 #define BTRFS_FS_QUOTA_OVERRIDE			14
 /* Used to record internally whether fs has been frozen */
 #define BTRFS_FS_FROZEN				15
+#define BTRFS_FS_DEDUPE_ENABLED			16
 
 /*
  * Indicate that a whole-filesystem exclusive operation is running
@@ -1118,6 +1119,12 @@ struct btrfs_fs_info {
 	spinlock_t ref_verify_lock;
 	struct rb_root block_tree;
 #endif
+
+	/*
+	 * Inband de-duplication related structures
+	 */
+	struct btrfs_dedupe_info *dedupe_info;
+	struct mutex dedupe_ioctl_lock;
 };
 
 static inline struct btrfs_fs_info *btrfs_sb(struct super_block *sb)
