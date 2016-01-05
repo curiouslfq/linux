@@ -1118,6 +1118,13 @@ struct btrfs_fs_info {
 	u32 nodesize;
 	u32 sectorsize;
 	u32 stripesize;
+
+	/*
+	 * Inband de-duplication related structures
+	 */
+	unsigned long dedupe_enabled:1;
+	struct btrfs_dedupe_info *dedupe_info;
+	struct mutex dedupe_ioctl_lock;
 };
 
 static inline struct btrfs_fs_info *btrfs_sb(struct super_block *sb)
