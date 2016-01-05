@@ -32,6 +32,7 @@
 #include "free-space-cache.h"
 #include "inode-map.h"
 #include "qgroup.h"
+#include "dedupe.h"
 
 /*
  * backref_node, mapping_node and tree_block start with this
@@ -4116,6 +4117,20 @@ restart:
 				}
 				rc->extents_found--;
 				rc->search_start = key.objectid;
+			}
+		}
+		/*
+		 * This data extent will be replaced, but normal dedupe_del()
+		 * will only happen at run_delayed_ref() time, which is too
+		 * late, so delete dedupe_hash early to prevent its ref get
+		 * increased during relocation
+		 */
+		if (rc->stage == MOVE_DATA_EXTENTS &&
+		    (flags & BTRFS_EXTENT_FLAG_DATA)) {
+			ret = btrfs_dedupe_del(trans, fs_info, key.objectid);
+			if (ret < 0) {
+				err = ret;
+				break;
 			}
 		}
 
