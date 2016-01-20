@@ -526,7 +526,7 @@ update_existing_head_ref(struct btrfs_delayed_ref_root *delayed_refs,
 	spin_unlock(&existing->lock);
 }
 
-static void init_delayed_ref_head(struct btrfs_delayed_ref_head *head_ref,
+void btrfs_init_delayed_ref_head(struct btrfs_delayed_ref_head *head_ref,
 				  struct btrfs_qgroup_extent_record *qrecord,
 				  u64 bytenr, u64 num_bytes, u64 ref_root,
 				  u64 reserved, int action, bool is_data,
@@ -654,7 +654,7 @@ add_delayed_ref_head(struct btrfs_trans_handle *trans,
 }
 
 /*
- * init_delayed_ref_common - Initialize the structure which represents a
+ * btrfs_init_delayed_ref_common - Initialize the structure which represents a
  *			     modification to a an extent.
  *
  * @fs_info:    Internal to the mounted filesystem mount structure.
@@ -678,7 +678,7 @@ add_delayed_ref_head(struct btrfs_trans_handle *trans,
  *		when recording a metadata extent or BTRFS_SHARED_DATA_REF_KEY/
  *		BTRFS_EXTENT_DATA_REF_KEY when recording data extent
  */
-static void init_delayed_ref_common(struct btrfs_fs_info *fs_info,
+void btrfs_init_delayed_ref_common(struct btrfs_fs_info *fs_info,
 				    struct btrfs_delayed_ref_node *ref,
 				    u64 bytenr, u64 num_bytes, u64 ref_root,
 				    int action, u8 ref_type)
@@ -751,14 +751,14 @@ int btrfs_add_delayed_tree_ref(struct btrfs_trans_handle *trans,
 	else
 		ref_type = BTRFS_TREE_BLOCK_REF_KEY;
 
-	init_delayed_ref_common(fs_info, &ref->node, bytenr, num_bytes,
-				ref_root, action, ref_type);
+	btrfs_init_delayed_ref_common(fs_info, &ref->node, bytenr, num_bytes,
+				      ref_root, action, ref_type);
 	ref->root = ref_root;
 	ref->parent = parent;
 	ref->level = level;
 
-	init_delayed_ref_head(head_ref, record, bytenr, num_bytes,
-			      ref_root, 0, action, false, is_system);
+	btrfs_init_delayed_ref_head(head_ref, record, bytenr, num_bytes,
+				    ref_root, 0, action, false, is_system);
 	head_ref->extent_op = extent_op;
 
 	delayed_refs = &trans->transaction->delayed_refs;
@@ -788,6 +788,29 @@ int btrfs_add_delayed_tree_ref(struct btrfs_trans_handle *trans,
 }
 
 /*
+ * Do real delayed data ref insert.
+ * Caller must hold delayed_refs->lock and allocation memory
+ * for dref,head_ref and record.
+ */
+int btrfs_add_delayed_data_ref_locked(struct btrfs_trans_handle *trans,
+			struct btrfs_delayed_ref_head *head_ref,
+			struct btrfs_qgroup_extent_record *qrecord,
+			struct btrfs_delayed_data_ref *ref, int action,
+			int *qrecord_inserted_ret, int *old_ref_mod,
+			int *new_ref_mod)
+{
+	struct btrfs_delayed_ref_root *delayed_refs;
+
+	head_ref = add_delayed_ref_head(trans, head_ref, qrecord,
+					action, qrecord_inserted_ret,
+					old_ref_mod, new_ref_mod);
+
+	delayed_refs = &trans->transaction->delayed_refs;
+
+	return insert_delayed_ref(trans, delayed_refs, head_ref, &ref->node);
+}
+
+/*
  * add a delayed data ref. it's similar to btrfs_add_delayed_tree_ref.
  */
 int btrfs_add_delayed_data_ref(struct btrfs_trans_handle *trans,
@@ -813,7 +836,7 @@ int btrfs_add_delayed_data_ref(struct btrfs_trans_handle *trans,
 	        ref_type = BTRFS_SHARED_DATA_REF_KEY;
 	else
 	        ref_type = BTRFS_EXTENT_DATA_REF_KEY;
-	init_delayed_ref_common(fs_info, &ref->node, bytenr, num_bytes,
+	btrfs_init_delayed_ref_common(fs_info, &ref->node, bytenr, num_bytes,
 				ref_root, action, ref_type);
 	ref->root = ref_root;
 	ref->parent = parent;
@@ -838,8 +861,8 @@ int btrfs_add_delayed_data_ref(struct btrfs_trans_handle *trans,
 		}
 	}
 
-	init_delayed_ref_head(head_ref, record, bytenr, num_bytes, ref_root,
-			      reserved, action, true, false);
+	btrfs_init_delayed_ref_head(head_ref, record, bytenr, num_bytes,
+			      ref_root, reserved, action, true, false);
 	head_ref->extent_op = NULL;
 
 	delayed_refs = &trans->transaction->delayed_refs;
@@ -849,11 +872,9 @@ int btrfs_add_delayed_data_ref(struct btrfs_trans_handle *trans,
 	 * insert both the head node and the new ref without dropping
 	 * the spin lock
 	 */
-	head_ref = add_delayed_ref_head(trans, head_ref, record,
-					action, &qrecord_inserted,
-					old_ref_mod, new_ref_mod);
-
-	ret = insert_delayed_ref(trans, delayed_refs, head_ref, &ref->node);
+	ret = btrfs_add_delayed_data_ref_locked(trans, head_ref,
+			record, ref, action, &qrecord_inserted, old_ref_mod,
+			new_ref_mod);
 	spin_unlock(&delayed_refs->lock);
 
 	trace_add_delayed_data_ref(trans->fs_info, &ref->node, ref,
@@ -880,7 +901,7 @@ int btrfs_add_delayed_extent_op(struct btrfs_fs_info *fs_info,
 	if (!head_ref)
 		return -ENOMEM;
 
-	init_delayed_ref_head(head_ref, NULL, bytenr, num_bytes, 0, 0,
+	btrfs_init_delayed_ref_head(head_ref, NULL, bytenr, num_bytes, 0, 0,
 			      BTRFS_UPDATE_DELAYED_HEAD, extent_op->is_data,
 			      false);
 	head_ref->extent_op = extent_op;
