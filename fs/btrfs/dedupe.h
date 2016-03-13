@@ -68,8 +68,17 @@ static inline int btrfs_dedupe_hash_hit(struct btrfs_dedupe_hash *hash)
 	return (hash && hash->bytenr);
 }
 
-int btrfs_dedupe_hash_size(u16 algo);
-struct btrfs_dedupe_hash *btrfs_dedupe_alloc_hash(u16 algo);
+static inline int btrfs_dedupe_hash_size(u16 algo)
+{
+	if (WARN_ON(algo >= ARRAY_SIZE(btrfs_hash_sizes)))
+		return -EINVAL;
+	return sizeof(struct btrfs_dedupe_hash) + btrfs_hash_sizes[algo];
+}
+
+static inline struct btrfs_dedupe_hash *btrfs_dedupe_alloc_hash(u16 algo)
+{
+	return kzalloc(btrfs_dedupe_hash_size(algo), GFP_NOFS);
+}
 
 /*
  * Initial inband dedupe info
