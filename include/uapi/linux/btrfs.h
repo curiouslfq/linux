@@ -682,6 +682,9 @@ struct btrfs_ioctl_get_dev_stats {
 /* Hash algorithm, only support SHA256 yet */
 #define BTRFS_DEDUPE_HASH_SHA256		0
 
+/* Default dedupe limit on number of hash */
+#define BTRFS_DEDUPE_LIMIT_NR_DEFAULT	(32 * 1024)
+
 /*
  * This structure is used for dedupe enable/disable/configure
  * and status ioctl.
@@ -699,7 +702,6 @@ struct btrfs_ioctl_dedupe_args {
 	u8 flags;		/* In: special flags for ioctl */
 	u8 __unused[472];	/* Pad to 512 bytes */
 };
-
 
 #define BTRFS_QUOTA_CTL_ENABLE	1
 #define BTRFS_QUOTA_CTL_DISABLE	2
