@@ -889,6 +889,13 @@ again:
 		root = read_fs_root(rc->extent_root->fs_info, key.offset);
 		if (IS_ERR(root)) {
 			err = PTR_ERR(root);
+			/*
+			 * Don't forget to cleanup current node.
+			 * As it may not be added to backref_cache but nr_node
+			 * increased.
+			 * This will cause BUG_ON() in backref_cache_cleanup().
+			 */
+			remove_backref_node(&rc->backref_cache, cur);
 			goto out;
 		}
 
@@ -3051,14 +3058,21 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
 	}
 
 	rb_node = rb_first(blocks);
-	while (rb_node) {
+	for (rb_node = rb_first(blocks); rb_node; rb_node = rb_next(rb_node)) {
 		block = rb_entry(rb_node, struct tree_block, rb_node);
 
 		node = build_backref_tree(rc, &block->key,
 					  block->level, block->bytenr);
 		if (IS_ERR(node)) {
+			/*
+			 * The root(dedupe tree yet) of the tree block is
+			 * going to be freed and can't be reached.
+			 * Just skip it and continue balancing.
+			 */
+			if (PTR_ERR(node) == -ENOENT)
+				continue;
 			err = PTR_ERR(node);
-			goto out;
+			break;
 		}
 
 		ret = relocate_tree_block(trans, rc, node, &block->key,
@@ -3066,11 +3080,9 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
 		if (ret < 0) {
 			if (ret != -EAGAIN || rb_node == rb_first(blocks))
 				err = ret;
-			goto out;
+			break;
 		}
-		rb_node = rb_next(rb_node);
 	}
-out:
 	err = finish_pending_nodes(trans, rc, path, err);
 
 out_free_path:
