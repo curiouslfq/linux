@@ -36,6 +36,35 @@ static inline struct inmem_hash *inmem_alloc_hash(u16 algo)
 			GFP_NOFS);
 }
 
+void btrfs_dedupe_status(struct btrfs_fs_info *fs_info,
+			 struct btrfs_ioctl_dedupe_args *dargs)
+{
+	struct btrfs_dedupe_info *dedupe_info = fs_info->dedupe_info;
+
+	if (!fs_info->dedupe_enabled || !dedupe_info) {
+		dargs->status = 0;
+		dargs->blocksize = 0;
+		dargs->backend = 0;
+		dargs->hash_algo = 0;
+		dargs->limit_nr = 0;
+		dargs->current_nr = 0;
+		memset(dargs->__unused, -1, sizeof(dargs->__unused));
+		return;
+	}
+	mutex_lock(&dedupe_info->lock);
+	dargs->status = 1;
+	dargs->blocksize = dedupe_info->blocksize;
+	dargs->backend = dedupe_info->backend;
+	dargs->hash_algo = dedupe_info->hash_algo;
+	dargs->limit_nr = dedupe_info->limit_nr;
+	dargs->limit_mem = dedupe_info->limit_nr *
+		(sizeof(struct inmem_hash) +
+		 btrfs_hash_sizes[dedupe_info->hash_algo]);
+	dargs->current_nr = dedupe_info->current_nr;
+	mutex_unlock(&dedupe_info->lock);
+	memset(dargs->__unused, -1, sizeof(dargs->__unused));
+}
+
 static int init_dedupe_info(struct btrfs_dedupe_info **ret_info,
 			    struct btrfs_ioctl_dedupe_args *dargs)
 {
@@ -413,6 +442,27 @@ static void unblock_all_writers(struct btrfs_fs_info *fs_info)
 
 	up_write(&sb->s_umount);
 	percpu_up_write(sb->s_writers.rw_sem + SB_FREEZE_WRITE - 1);
+}
+
+int btrfs_dedupe_cleanup(struct btrfs_fs_info *fs_info)
+{
+	struct btrfs_dedupe_info *dedupe_info;
+
+	fs_info->dedupe_enabled = 0;
+	/* same as disable */
+	smp_wmb();
+	dedupe_info = fs_info->dedupe_info;
+	fs_info->dedupe_info = NULL;
+
+	if (!dedupe_info)
+		return 0;
+
+	if (dedupe_info->backend == BTRFS_DEDUPE_BACKEND_INMEMORY)
+		inmem_destroy(dedupe_info);
+
+	crypto_free_shash(dedupe_info->dedupe_driver);
+	kfree(dedupe_info);
+	return 0;
 }
 
 int btrfs_dedupe_disable(struct btrfs_fs_info *fs_info)
