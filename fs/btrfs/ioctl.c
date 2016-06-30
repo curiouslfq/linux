@@ -3327,6 +3327,19 @@ static long btrfs_ioctl_dedupe_ctl(struct btrfs_root *root, void __user *args)
 		btrfs_dedupe_status(fs_info, dargs);
 		mutex_unlock(&fs_info->dedupe_ioctl_lock);
 		break;
+	case BTRFS_DEDUPE_CTL_RECONF:
+		mutex_lock(&fs_info->dedupe_ioctl_lock);
+		ret = btrfs_dedupe_reconfigure(fs_info, dargs);
+		/*
+		 * Also copy the result to caller for further use
+		 * if enable succeeded.
+		 * For error case, dargs is already set up with
+		 * special values indicating error reason.
+		 */
+		if (!ret)
+			btrfs_dedupe_status(fs_info, dargs);
+		mutex_unlock(&fs_info->dedupe_ioctl_lock);
+		break;
 	default:
 		/*
 		 * Use this return value to inform progs that kernel

@@ -677,7 +677,16 @@ struct btrfs_ioctl_get_dev_stats {
 #define BTRFS_DEDUPE_CTL_ENABLE	1
 #define BTRFS_DEDUPE_CTL_DISABLE 2
 #define BTRFS_DEDUPE_CTL_STATUS	3
-#define BTRFS_DEDUPE_CTL_LAST	4
+#define BTRFS_DEDUPE_CTL_RECONF	4
+#define BTRFS_DEDUPE_CTL_LAST	5
+
+/*
+ * Allow enable command to be executed on dedupe enabled fs.
+ * Make dedupe_enable ioctl to be stateless.
+ *
+ * Or only dedup_reconf ioctl can be executed on dedupe enabled fs
+ */
+#define BTRFS_DEDUPE_FLAG_FORCE		(1 << 0)
 /*
  * This structure is used for dedupe enable/disable/configure
  * and status ioctl.

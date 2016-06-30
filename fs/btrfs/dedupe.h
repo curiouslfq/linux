@@ -109,6 +109,19 @@ static inline struct btrfs_dedupe_hash *btrfs_dedupe_alloc_hash(u16 algo)
 int btrfs_dedupe_enable(struct btrfs_fs_info *fs_info,
 			struct btrfs_ioctl_dedupe_args *dargs);
 
+/*
+ * Reconfigure given parameter for dedupe
+ * Can only be called when dedupe is already enabled
+ *
+ * dargs member which don't need to be modified should be left
+ * with 0 for limit_nr/limit_offset or -1 for other fields
+ *
+ * Return 0 for success
+ * Return <0 for any error
+ * (Same error return value with dedupe_enable)
+ */
+int btrfs_dedupe_reconfigure(struct btrfs_fs_info *fs_info,
+			     struct btrfs_ioctl_dedupe_args *dargs);
 
 /*
  * Get inband dedupe info
