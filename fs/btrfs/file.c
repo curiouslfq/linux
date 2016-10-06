@@ -1595,6 +1595,9 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
 	if (!pages)
 		return -ENOMEM;
 
+	if (inode_need_compress(inode, -1, 0))
+		reserve_type = BTRFS_RESERVE_COMPRESS;
+
 	while (iov_iter_count(i) > 0) {
 		size_t offset = pos & (PAGE_SIZE - 1);
 		size_t sector_offset;
