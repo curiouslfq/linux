@@ -23,6 +23,7 @@
 #define EXTENT_QGROUP_RESERVED	(1U << 16)
 #define EXTENT_CLEAR_DATA_RESV	(1U << 17)
 #define EXTENT_DELALLOC_NEW	(1U << 18)
+#define EXTENT_COMPRESS		(1U << 19)
 #define EXTENT_IOBITS		(EXTENT_LOCKED | EXTENT_WRITEBACK)
 #define EXTENT_DO_ACCOUNTING    (EXTENT_CLEAR_META_RESV | \
 				 EXTENT_CLEAR_DATA_RESV)
@@ -300,6 +301,10 @@ int clear_record_extent_bits(struct extent_io_tree *tree, u64 start, u64 end,
 int clear_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 		     unsigned bits, int wake, int delete,
 		     struct extent_state **cached, gfp_t mask);
+
+enum btrfs_metadata_reserve_type;
+void adjust_outstanding_extents(struct inode *inode, u64 start, u64 end,
+		enum btrfs_metadata_reserve_type reserve_type);
 
 static inline int unlock_extent(struct extent_io_tree *tree, u64 start, u64 end)
 {
