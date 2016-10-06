@@ -3195,6 +3195,9 @@ static int relocate_file_extent_cluster(struct inode *inode,
 	if (!cluster->nr)
 		return 0;
 
+	if (inode_need_compress(inode, -1, 0))
+		reserve_type = BTRFS_RESERVE_COMPRESS;
+
 	ra = kzalloc(sizeof(*ra), GFP_NOFS);
 	if (!ra)
 		return -ENOMEM;
