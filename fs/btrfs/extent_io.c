@@ -597,7 +597,7 @@ static int __clear_extent_bit(struct extent_io_tree *tree, u64 start, u64 end,
 	btrfs_debug_check_extent_io_range(tree, start, end);
 
 	if (bits & EXTENT_DELALLOC)
-		bits |= EXTENT_NORESERVE | EXTENT_COMPRESS;
+		bits |= EXTENT_NORESERVE | EXTENT_COMPRESS | EXTENT_DEDUPE;
 
 	if (delete)
 		bits |= ~EXTENT_CTLBITS;
@@ -740,7 +740,8 @@ static void adjust_one_outstanding_extent(struct inode *inode, u64 len,
 				enum btrfs_metadata_reserve_type reserve_type)
 {
 	unsigned int old_extents, new_extents;
-	u64 max_extent_size = btrfs_max_extent_size(reserve_type);
+	u64 max_extent_size = btrfs_max_extent_size(BTRFS_I(inode),
+						    reserve_type);
 
 	old_extents = div64_u64(len + max_extent_size - 1, max_extent_size);
 	new_extents = div64_u64(len + BTRFS_MAX_EXTENT_SIZE - 1,
@@ -779,7 +780,7 @@ void adjust_outstanding_extents(struct inode *inode, u64 start, u64 end,
 		 * The whole range is locked, so we can safely clear
 		 * EXTENT_COMPRESS flag.
 		 */
-		state->state &= ~EXTENT_COMPRESS;
+		state->state &= ~(EXTENT_COMPRESS | EXTENT_DEDUPE);
 		adjust_one_outstanding_extent(inode,
 				state->end - state->start + 1, reserve_type);
 		node = rb_next(node);
@@ -1561,7 +1562,8 @@ static noinline u64 find_delalloc_range(struct extent_io_tree *tree,
 		state = rb_entry(node, struct extent_state, rb_node);
 		if (found && (state->start != cur_start ||
 			      (state->state & EXTENT_BOUNDARY) ||
-			      (state->state ^ pre_state) & EXTENT_COMPRESS)) {
+			      (state->state ^ pre_state) & (EXTENT_COMPRESS |
+			       EXTENT_DEDUPE))) {
 			goto out;
 		}
 		if (!(state->state & EXTENT_DELALLOC)) {
