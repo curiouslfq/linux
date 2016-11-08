@@ -577,7 +577,8 @@ void btrfs_put_ordered_extent(struct btrfs_ordered_extent *entry)
  * and waiters are woken up.
  */
 void btrfs_remove_ordered_extent(struct inode *inode,
-				 struct btrfs_ordered_extent *entry)
+				 struct btrfs_ordered_extent *entry,
+				 enum btrfs_metadata_reserve_type reserve_type)
 {
 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
 	struct btrfs_ordered_inode_tree *tree;
@@ -591,7 +592,8 @@ void btrfs_remove_ordered_extent(struct inode *inode,
 	btrfs_mod_outstanding_extents(btrfs_inode, -1);
 	spin_unlock(&btrfs_inode->lock);
 	if (root != fs_info->tree_root)
-		btrfs_delalloc_release_metadata(btrfs_inode, entry->len, false);
+		btrfs_delalloc_release_metadata(btrfs_inode, entry->len, false,
+						reserve_type);
 
 	tree = &btrfs_inode->ordered_tree;
 	spin_lock_irq(&tree->lock);

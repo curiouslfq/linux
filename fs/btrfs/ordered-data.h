@@ -153,7 +153,8 @@ btrfs_ordered_inode_tree_init(struct btrfs_ordered_inode_tree *t)
 
 void btrfs_put_ordered_extent(struct btrfs_ordered_extent *entry);
 void btrfs_remove_ordered_extent(struct inode *inode,
-				struct btrfs_ordered_extent *entry);
+				struct btrfs_ordered_extent *entry,
+				enum btrfs_metadata_reserve_type reserve_type);
 int btrfs_dec_test_ordered_pending(struct inode *inode,
 				   struct btrfs_ordered_extent **cached,
 				   u64 file_offset, u64 io_size, int uptodate);
