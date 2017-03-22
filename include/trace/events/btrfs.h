@@ -5,8 +5,11 @@
 #define _TRACE_BTRFS_H
 
 #include <linux/writeback.h>
+#include <linux/blktrace_api.h>
 #include <linux/tracepoint.h>
 #include <trace/events/mmflags.h>
+
+#define RWBS_LEN	8
 
 struct btrfs_root;
 struct btrfs_fs_info;
@@ -24,6 +27,8 @@ struct extent_buffer;
 struct btrfs_work;
 struct __btrfs_workqueue;
 struct btrfs_qgroup_extent_record;
+struct btrfs_device;
+struct bio;
 
 #define show_ref_type(type)						\
 	__print_symbolic(type,						\
@@ -1473,6 +1478,70 @@ TRACE_EVENT(qgroup_update_counters,
 		  __entry->qgid,
 		  __entry->cur_old_count,
 		  __entry->cur_new_count)
+);
+
+DECLARE_EVENT_CLASS(btrfs__device,
+	TP_PROTO(struct btrfs_device *device,
+		int wait),
+
+	TP_ARGS(device, wait),
+
+	TP_STRUCT__entry_btrfs(
+		__field(	int,  wait		)
+		__field(	u64,  devid		)
+	),
+
+	TP_fast_assign_btrfs(device->fs_info,
+		__entry->wait		= wait,
+		__entry->devid		= device->devid;
+	),
+
+	TP_printk_btrfs("wait=%d devid=%llu",
+		  (int)__entry->wait,
+		  (unsigned long long)__entry->devid)
+);
+
+DEFINE_EVENT(btrfs__device, write_dev_flush,
+
+	TP_PROTO(struct btrfs_device *device,
+		 int wait),
+
+	TP_ARGS(device, wait)
+);
+
+DECLARE_EVENT_CLASS(btrfs__bio,
+	TP_PROTO(struct bio *bio),
+
+	TP_ARGS(bio),
+
+
+        TP_STRUCT__entry(
+                __field( dev_t,         dev                     )
+                __field( sector_t,      sector                  )
+                __field( unsigned int,  nr_sector               )
+                __array( char,          rwbs,   RWBS_LEN        )
+                __array( char,          comm,   TASK_COMM_LEN   )
+        ),
+
+        TP_fast_assign(
+                __entry->dev            = bio->bi_bdev->bd_dev;
+                __entry->sector         = bio->bi_iter.bi_sector;
+                __entry->nr_sector      = bio_sectors(bio);
+                blk_fill_rwbs(__entry->rwbs, bio->bi_opf, bio->bi_iter.bi_size);
+                memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+        ),
+
+        TP_printk("%d,%d %s %llu + %u [%s]",
+                  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->rwbs,
+                  (unsigned long long)__entry->sector,
+                  __entry->nr_sector, __entry->comm)
+);
+
+DEFINE_EVENT(btrfs__bio, write_dev_flush_bio,
+
+	TP_PROTO(struct bio *bio),
+
+	TP_ARGS(bio)
 );
 
 #endif /* _TRACE_BTRFS_H */

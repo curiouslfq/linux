@@ -3521,6 +3521,8 @@ int write_dev_flush(struct btrfs_device *device, int wait)
 	struct bio *bio;
 	int ret = 0;
 
+	trace_write_dev_flush(device, wait);
+
 	if (device->nobarriers)
 		return 0;
 
@@ -3561,6 +3563,7 @@ int write_dev_flush(struct btrfs_device *device, int wait)
 	device->flush_bio = bio;
 
 	bio_get(bio);
+	trace_write_dev_flush_bio(bio);
 	btrfsic_submit_bio(bio);
 
 	return 0;
