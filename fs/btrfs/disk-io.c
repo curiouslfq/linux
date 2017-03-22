@@ -3412,7 +3412,7 @@ struct buffer_head *btrfs_read_dev_super(struct block_device *bdev)
  *
  * max_mirrors == 0 means to write them all.
  */
-static int write_dev_supers(struct btrfs_device *device,
+int write_dev_supers(struct btrfs_device *device,
 			    struct btrfs_super_block *sb,
 			    int wait, int max_mirrors)
 {
@@ -3502,7 +3502,7 @@ static int write_dev_supers(struct btrfs_device *device,
  * endio for the write_dev_flush, this will wake anyone waiting
  * for the barrier when it is done
  */
-static void btrfs_end_empty_barrier(struct bio *bio)
+void btrfs_end_empty_barrier(struct bio *bio)
 {
 	if (bio->bi_private)
 		complete(bio->bi_private);
@@ -3516,7 +3516,7 @@ static void btrfs_end_empty_barrier(struct bio *bio)
  * any device where the flush fails with eopnotsupp are flagged as not-barrier
  * capable
  */
-static int write_dev_flush(struct btrfs_device *device, int wait)
+int write_dev_flush(struct btrfs_device *device, int wait)
 {
 	struct bio *bio;
 	int ret = 0;
@@ -3570,7 +3570,7 @@ static int write_dev_flush(struct btrfs_device *device, int wait)
  * send an empty flush down to each device in parallel,
  * then wait for them
  */
-static int barrier_all_devices(struct btrfs_fs_info *info)
+int barrier_all_devices(struct btrfs_fs_info *info)
 {
 	struct list_head *head;
 	struct btrfs_device *dev;
