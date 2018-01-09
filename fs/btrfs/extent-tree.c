@@ -10012,7 +10012,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
 	u64 feature;
 	int mixed;
 
-	feature = btrfs_super_incompat_flags(info->super_copy);
+	feature = btrfs_stack_super_incompat_flags(info->super_copy);
 	mixed = !!(feature & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS);
 
 	key.objectid = 0;
@@ -10831,7 +10831,7 @@ int btrfs_init_space_info(struct btrfs_fs_info *fs_info)
 	if (!btrfs_stack_super_root(disk_super))
 		return -EINVAL;
 
-	features = btrfs_super_incompat_flags(disk_super);
+	features = btrfs_stack_super_incompat_flags(disk_super);
 	if (features & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS)
 		mixed = 1;
 

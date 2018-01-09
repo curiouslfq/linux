@@ -2650,7 +2650,7 @@ int open_ctree(struct super_block *sb,
 		goto fail_alloc;
 	}
 
-	features = btrfs_super_incompat_flags(disk_super) &
+	features = btrfs_stack_super_incompat_flags(disk_super) &
 		~BTRFS_FEATURE_INCOMPAT_SUPP;
 	if (features) {
 		btrfs_err(fs_info,
@@ -2660,7 +2660,7 @@ int open_ctree(struct super_block *sb,
 		goto fail_alloc;
 	}
 
-	features = btrfs_super_incompat_flags(disk_super);
+	features = btrfs_stack_super_incompat_flags(disk_super);
 	features |= BTRFS_FEATURE_INCOMPAT_MIXED_BACKREF;
 	if (fs_info->compress_type == BTRFS_COMPRESS_LZO)
 		features |= BTRFS_FEATURE_INCOMPAT_COMPRESS_LZO;
@@ -2708,7 +2708,7 @@ int open_ctree(struct super_block *sb,
 	 * Needn't use the lock because there is no other task which will
 	 * update the flag.
 	 */
-	btrfs_set_super_incompat_flags(disk_super, features);
+	btrfs_set_stack_super_incompat_flags(disk_super, features);
 
 	features = btrfs_stack_super_compat_ro_flags(disk_super) &
 		~BTRFS_FEATURE_COMPAT_RO_SUPP;

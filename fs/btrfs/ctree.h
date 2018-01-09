@@ -2318,7 +2318,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_compat_flags, struct btrfs_super_block,
 			 compat_flags, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_super_compat_ro_flags, struct btrfs_super_block,
 			 compat_ro_flags, 64);
-BTRFS_SETGET_STACK_FUNCS(super_incompat_flags, struct btrfs_super_block,
+BTRFS_SETGET_STACK_FUNCS(stack_super_incompat_flags, struct btrfs_super_block,
 			 incompat_flags, 64);
 BTRFS_SETGET_STACK_FUNCS(super_csum_type, struct btrfs_super_block,
 			 csum_type, 16);
@@ -3532,13 +3532,13 @@ static inline void __btrfs_set_fs_incompat(struct btrfs_fs_info *fs_info,
 	u64 features;
 
 	disk_super = fs_info->super_copy;
-	features = btrfs_super_incompat_flags(disk_super);
+	features = btrfs_stack_super_incompat_flags(disk_super);
 	if (!(features & flag)) {
 		spin_lock(&fs_info->super_lock);
-		features = btrfs_super_incompat_flags(disk_super);
+		features = btrfs_stack_super_incompat_flags(disk_super);
 		if (!(features & flag)) {
 			features |= flag;
-			btrfs_set_super_incompat_flags(disk_super, features);
+			btrfs_set_stack_super_incompat_flags(disk_super, features);
 			btrfs_info(fs_info, "setting %llu feature flag",
 					 flag);
 		}
@@ -3556,13 +3556,13 @@ static inline void __btrfs_clear_fs_incompat(struct btrfs_fs_info *fs_info,
 	u64 features;
 
 	disk_super = fs_info->super_copy;
-	features = btrfs_super_incompat_flags(disk_super);
+	features = btrfs_stack_super_incompat_flags(disk_super);
 	if (features & flag) {
 		spin_lock(&fs_info->super_lock);
-		features = btrfs_super_incompat_flags(disk_super);
+		features = btrfs_stack_super_incompat_flags(disk_super);
 		if (features & flag) {
 			features &= ~flag;
-			btrfs_set_super_incompat_flags(disk_super, features);
+			btrfs_set_stack_super_incompat_flags(disk_super, features);
 			btrfs_info(fs_info, "clearing %llu feature flag",
 					 flag);
 		}
@@ -3577,7 +3577,7 @@ static inline bool __btrfs_fs_incompat(struct btrfs_fs_info *fs_info, u64 flag)
 {
 	struct btrfs_super_block *disk_super;
 	disk_super = fs_info->super_copy;
-	return !!(btrfs_super_incompat_flags(disk_super) & flag);
+	return !!(btrfs_stack_super_incompat_flags(disk_super) & flag);
 }
 
 #define btrfs_set_fs_compat_ro(__fs_info, opt) \

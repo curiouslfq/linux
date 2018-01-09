@@ -3792,7 +3792,7 @@ int btrfs_balance(struct btrfs_balance_control *bctl,
 		goto out;
 	}
 
-	allowed = btrfs_super_incompat_flags(fs_info->super_copy);
+	allowed = btrfs_stack_super_incompat_flags(fs_info->super_copy);
 	if (allowed & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS)
 		mixed = 1;
 

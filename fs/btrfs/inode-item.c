@@ -388,7 +388,7 @@ out:
 		struct btrfs_super_block *disk_super = fs_info->super_copy;
 		/* We ran out of space in the ref array. Need to
 		 * add an extended ref. */
-		if (btrfs_super_incompat_flags(disk_super)
+		if (btrfs_stack_super_incompat_flags(disk_super)
 		    & BTRFS_FEATURE_INCOMPAT_EXTENDED_IREF)
 			ret = btrfs_insert_inode_extref(trans, root, name,
 							name_len,
