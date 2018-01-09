@@ -1559,7 +1559,7 @@ static noinline int create_pending_snapshot(struct btrfs_trans_handle *trans,
 	}
 	btrfs_set_stack_timespec_sec(&new_root_item->otime, cur_time.tv_sec);
 	btrfs_set_stack_timespec_nsec(&new_root_item->otime, cur_time.tv_nsec);
-	btrfs_set_root_otransid(new_root_item, trans->transid);
+	btrfs_set_stack_root_otransid(new_root_item, trans->transid);
 
 	old = btrfs_lock_root_node(root);
 	ret = btrfs_cow_block(trans, root, old, NULL, 0, &old);

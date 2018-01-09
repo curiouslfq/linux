@@ -524,7 +524,7 @@ static noinline int create_subvol(struct inode *dir,
 	btrfs_set_stack_timespec_nsec(&root_item->otime, cur_time.tv_nsec);
 	root_item->ctime = root_item->otime;
 	btrfs_set_stack_root_ctransid(root_item, trans->transid);
-	btrfs_set_root_otransid(root_item, trans->transid);
+	btrfs_set_stack_root_otransid(root_item, trans->transid);
 
 	btrfs_tree_unlock(leaf);
 	free_extent_buffer(leaf);
