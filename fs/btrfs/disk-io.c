@@ -4012,16 +4012,16 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	 * Obvious sys_chunk_array corruptions, it must hold at least one key
 	 * and one chunk
 	 */
-	if (btrfs_super_sys_array_size(sb) > BTRFS_SYSTEM_CHUNK_ARRAY_SIZE) {
+	if (btrfs_stack_super_sys_array_size(sb) > BTRFS_SYSTEM_CHUNK_ARRAY_SIZE) {
 		btrfs_err(fs_info, "system chunk array too big %u > %u",
-			  btrfs_super_sys_array_size(sb),
+			  btrfs_stack_super_sys_array_size(sb),
 			  BTRFS_SYSTEM_CHUNK_ARRAY_SIZE);
 		ret = -EINVAL;
 	}
-	if (btrfs_super_sys_array_size(sb) < sizeof(struct btrfs_disk_key)
+	if (btrfs_stack_super_sys_array_size(sb) < sizeof(struct btrfs_disk_key)
 			+ sizeof(struct btrfs_chunk)) {
 		btrfs_err(fs_info, "system chunk array too small %u < %zu",
-			  btrfs_super_sys_array_size(sb),
+			  btrfs_stack_super_sys_array_size(sb),
 			  sizeof(struct btrfs_disk_key)
 			  + sizeof(struct btrfs_chunk));
 		ret = -EINVAL;
