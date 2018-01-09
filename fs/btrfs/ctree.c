@@ -4622,7 +4622,7 @@ void btrfs_truncate_item(struct btrfs_fs_info *fs_info,
 
 		btrfs_item_key(leaf, &disk_key, slot);
 
-		if (btrfs_disk_key_type(&disk_key) == BTRFS_EXTENT_DATA_KEY) {
+		if (btrfs_stack_disk_key_type(&disk_key) == BTRFS_EXTENT_DATA_KEY) {
 			unsigned long ptr;
 			struct btrfs_file_extent_item *fi;
 
