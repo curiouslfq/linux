@@ -2674,14 +2674,14 @@ int open_ctree(struct super_block *sb,
 	 * flag our filesystem as having big metadata blocks if
 	 * they are bigger than the page size
 	 */
-	if (btrfs_super_nodesize(disk_super) > PAGE_SIZE) {
+	if (btrfs_stack_super_nodesize(disk_super) > PAGE_SIZE) {
 		if (!(features & BTRFS_FEATURE_INCOMPAT_BIG_METADATA))
 			btrfs_info(fs_info,
 				"flagging fs with big metadata feature");
 		features |= BTRFS_FEATURE_INCOMPAT_BIG_METADATA;
 	}
 
-	nodesize = btrfs_super_nodesize(disk_super);
+	nodesize = btrfs_stack_super_nodesize(disk_super);
 	sectorsize = btrfs_stack_super_sectorsize(disk_super);
 	stripesize = sectorsize;
 	fs_info->dirty_metadata_batch = nodesize * (1 + ilog2(nr_cpu_ids));
@@ -3902,7 +3902,7 @@ int btrfs_read_buffer(struct extent_buffer *buf, u64 parent_transid)
 static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 {
 	struct btrfs_super_block *sb = fs_info->super_copy;
-	u64 nodesize = btrfs_super_nodesize(sb);
+	u64 nodesize = btrfs_stack_super_nodesize(sb);
 	u64 sectorsize = btrfs_stack_super_sectorsize(sb);
 	int ret = 0;
 
@@ -3984,7 +3984,7 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	 * Hint to catch really bogus numbers, bitflips or so, more exact checks are
 	 * done later
 	 */
-	if (btrfs_stack_super_bytes_used(sb) < 6 * btrfs_super_nodesize(sb)) {
+	if (btrfs_stack_super_bytes_used(sb) < 6 * btrfs_stack_super_nodesize(sb)) {
 		btrfs_err(fs_info, "bytes_used is too small %llu",
 			  btrfs_stack_super_bytes_used(sb));
 		ret = -EINVAL;
