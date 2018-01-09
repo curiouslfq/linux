@@ -2316,7 +2316,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_num_devices, struct btrfs_super_block,
 			 num_devices, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_super_compat_flags, struct btrfs_super_block,
 			 compat_flags, 64);
-BTRFS_SETGET_STACK_FUNCS(super_compat_ro_flags, struct btrfs_super_block,
+BTRFS_SETGET_STACK_FUNCS(stack_super_compat_ro_flags, struct btrfs_super_block,
 			 compat_ro_flags, 64);
 BTRFS_SETGET_STACK_FUNCS(super_incompat_flags, struct btrfs_super_block,
 			 incompat_flags, 64);
@@ -3590,13 +3590,13 @@ static inline void __btrfs_set_fs_compat_ro(struct btrfs_fs_info *fs_info,
 	u64 features;
 
 	disk_super = fs_info->super_copy;
-	features = btrfs_super_compat_ro_flags(disk_super);
+	features = btrfs_stack_super_compat_ro_flags(disk_super);
 	if (!(features & flag)) {
 		spin_lock(&fs_info->super_lock);
-		features = btrfs_super_compat_ro_flags(disk_super);
+		features = btrfs_stack_super_compat_ro_flags(disk_super);
 		if (!(features & flag)) {
 			features |= flag;
-			btrfs_set_super_compat_ro_flags(disk_super, features);
+			btrfs_set_stack_super_compat_ro_flags(disk_super, features);
 			btrfs_info(fs_info, "setting %llu ro feature flag",
 				   flag);
 		}
@@ -3614,13 +3614,13 @@ static inline void __btrfs_clear_fs_compat_ro(struct btrfs_fs_info *fs_info,
 	u64 features;
 
 	disk_super = fs_info->super_copy;
-	features = btrfs_super_compat_ro_flags(disk_super);
+	features = btrfs_stack_super_compat_ro_flags(disk_super);
 	if (features & flag) {
 		spin_lock(&fs_info->super_lock);
-		features = btrfs_super_compat_ro_flags(disk_super);
+		features = btrfs_stack_super_compat_ro_flags(disk_super);
 		if (features & flag) {
 			features &= ~flag;
-			btrfs_set_super_compat_ro_flags(disk_super, features);
+			btrfs_set_stack_super_compat_ro_flags(disk_super, features);
 			btrfs_info(fs_info, "clearing %llu ro feature flag",
 				   flag);
 		}
@@ -3635,7 +3635,7 @@ static inline int __btrfs_fs_compat_ro(struct btrfs_fs_info *fs_info, u64 flag)
 {
 	struct btrfs_super_block *disk_super;
 	disk_super = fs_info->super_copy;
-	return !!(btrfs_super_compat_ro_flags(disk_super) & flag);
+	return !!(btrfs_stack_super_compat_ro_flags(disk_super) & flag);
 }
 
 /* acl.c */

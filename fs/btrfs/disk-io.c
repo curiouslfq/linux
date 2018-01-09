@@ -2710,7 +2710,7 @@ int open_ctree(struct super_block *sb,
 	 */
 	btrfs_set_super_incompat_flags(disk_super, features);
 
-	features = btrfs_super_compat_ro_flags(disk_super) &
+	features = btrfs_stack_super_compat_ro_flags(disk_super) &
 		~BTRFS_FEATURE_COMPAT_RO_SUPP;
 	if (!sb_rdonly(sb) && features) {
 		btrfs_err(fs_info,

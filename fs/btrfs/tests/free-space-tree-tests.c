@@ -469,7 +469,7 @@ static int run_test(test_func_t test_func, int bitmaps, u32 sectorsize,
 		goto out;
 	}
 
-	btrfs_set_super_compat_ro_flags(root->fs_info->super_copy,
+	btrfs_set_stack_super_compat_ro_flags(root->fs_info->super_copy,
 					BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE);
 	root->fs_info->free_space_root = root;
 	root->fs_info->tree_root = root;
