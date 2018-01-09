@@ -506,7 +506,7 @@ static noinline int create_subvol(struct inode *dir,
 	btrfs_set_stack_inode_mode(inode_item, S_IFDIR | 0755);
 
 	btrfs_set_stack_root_flags(root_item, 0);
-	btrfs_set_root_limit(root_item, 0);
+	btrfs_set_stack_root_limit(root_item, 0);
 	btrfs_set_stack_inode_flags(inode_item, BTRFS_INODE_ROOT_ITEM_INIT);
 
 	btrfs_set_stack_root_bytenr(root_item, leaf->start);
