@@ -509,7 +509,7 @@ void btrfs_update_root_times(struct btrfs_trans_handle *trans,
 
 	ktime_get_real_ts(&ct);
 	spin_lock(&root->root_item_lock);
-	btrfs_set_root_ctransid(item, trans->transid);
+	btrfs_set_stack_root_ctransid(item, trans->transid);
 	btrfs_set_stack_timespec_sec(&item->ctime, ct.tv_sec);
 	btrfs_set_stack_timespec_nsec(&item->ctime, ct.tv_nsec);
 	spin_unlock(&root->root_item_lock);
