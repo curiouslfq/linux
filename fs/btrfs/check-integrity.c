@@ -799,7 +799,7 @@ static int btrfsic_process_superblock_dev_mirror(
 	    (bh->b_data + (dev_bytenr & (BTRFS_BDEV_BLOCKSIZE - 1)));
 
 	if (btrfs_stack_super_bytenr(super_tmp) != dev_bytenr ||
-	    btrfs_super_magic(super_tmp) != BTRFS_MAGIC ||
+	    btrfs_stack_super_magic(super_tmp) != BTRFS_MAGIC ||
 	    memcmp(device->uuid, super_tmp->dev_item.uuid, BTRFS_UUID_SIZE) ||
 	    btrfs_stack_super_nodesize(super_tmp) != state->metablock_size ||
 	    btrfs_stack_super_sectorsize(super_tmp) != state->datablock_size) {

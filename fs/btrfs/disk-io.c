@@ -3166,7 +3166,7 @@ int btrfs_read_dev_one_super(struct block_device *bdev, int copy_num,
 
 	super = (struct btrfs_super_block *)bh->b_data;
 	if (btrfs_stack_super_bytenr(super) != bytenr ||
-		    btrfs_super_magic(super) != BTRFS_MAGIC) {
+		    btrfs_stack_super_magic(super) != BTRFS_MAGIC) {
 		brelse(bh);
 		return -EINVAL;
 	}
@@ -3906,7 +3906,7 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	u64 sectorsize = btrfs_stack_super_sectorsize(sb);
 	int ret = 0;
 
-	if (btrfs_super_magic(sb) != BTRFS_MAGIC) {
+	if (btrfs_stack_super_magic(sb) != BTRFS_MAGIC) {
 		btrfs_err(fs_info, "no valid FS found");
 		ret = -EINVAL;
 	}

@@ -1095,7 +1095,7 @@ static int btrfs_read_disk_super(struct block_device *bdev, u64 bytenr,
 	*disk_super = p + (bytenr & ~PAGE_MASK);
 
 	if (btrfs_stack_super_bytenr(*disk_super) != bytenr ||
-	    btrfs_super_magic(*disk_super) != BTRFS_MAGIC) {
+	    btrfs_stack_super_magic(*disk_super) != BTRFS_MAGIC) {
 		btrfs_release_disk_super(*page);
 		return 1;
 	}
