@@ -406,7 +406,7 @@ static int btrfs_check_super_csum(struct btrfs_fs_info *fs_info,
 {
 	struct btrfs_super_block *disk_sb =
 		(struct btrfs_super_block *)raw_disk_sb;
-	u16 csum_type = btrfs_super_csum_type(disk_sb);
+	u16 csum_type = btrfs_stack_super_csum_type(disk_sb);
 	int ret = 0;
 
 	if (csum_type == BTRFS_CSUM_TYPE_CRC32) {
