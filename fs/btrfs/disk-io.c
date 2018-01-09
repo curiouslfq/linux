@@ -1843,7 +1843,7 @@ static int find_newest_super_backup(struct btrfs_fs_info *info, u64 newest_gen)
 
 	for (i = 0; i < BTRFS_NUM_BACKUP_ROOTS; i++) {
 		root_backup = info->super_copy->super_roots + i;
-		cur = btrfs_backup_tree_root_gen(root_backup);
+		cur = btrfs_stack_backup_tree_root_gen(root_backup);
 		if (cur == newest_gen)
 			newest_index = i;
 	}
@@ -1851,7 +1851,7 @@ static int find_newest_super_backup(struct btrfs_fs_info *info, u64 newest_gen)
 	/* check to see if we actually wrapped around */
 	if (newest_index == BTRFS_NUM_BACKUP_ROOTS - 1) {
 		root_backup = info->super_copy->super_roots;
-		cur = btrfs_backup_tree_root_gen(root_backup);
+		cur = btrfs_stack_backup_tree_root_gen(root_backup);
 		if (cur == newest_gen)
 			newest_index = 0;
 	}
@@ -1898,7 +1898,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	 * this happens only at umount
 	 */
 	root_backup = info->super_for_commit->super_roots + last_backup;
-	if (btrfs_backup_tree_root_gen(root_backup) ==
+	if (btrfs_stack_backup_tree_root_gen(root_backup) ==
 	    btrfs_header_generation(info->tree_root->node))
 		next_backup = last_backup;
 
@@ -1913,7 +1913,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	info->backup_root_index = (next_backup + 1) % BTRFS_NUM_BACKUP_ROOTS;
 
 	btrfs_set_stack_backup_tree_root(root_backup, info->tree_root->node->start);
-	btrfs_set_backup_tree_root_gen(root_backup,
+	btrfs_set_stack_backup_tree_root_gen(root_backup,
 			       btrfs_header_generation(info->tree_root->node));
 
 	btrfs_set_backup_tree_root_level(root_backup,
@@ -2009,7 +2009,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	root_backup = super->super_roots + newest;
 
 	btrfs_set_super_generation(super,
-				   btrfs_backup_tree_root_gen(root_backup));
+				   btrfs_stack_backup_tree_root_gen(root_backup));
 	btrfs_set_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_super_root_level(super,
 				   btrfs_backup_tree_root_level(root_backup));
