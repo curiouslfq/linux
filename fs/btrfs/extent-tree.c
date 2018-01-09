@@ -10226,7 +10226,7 @@ int btrfs_make_block_group(struct btrfs_trans_handle *trans,
 		return -ENOMEM;
 
 	btrfs_set_stack_block_group_used(&cache->item, bytes_used);
-	btrfs_set_block_group_chunk_objectid(&cache->item,
+	btrfs_set_stack_block_group_chunk_objectid(&cache->item,
 					     BTRFS_FIRST_CHUNK_TREE_OBJECTID);
 	btrfs_set_block_group_flags(&cache->item, type);
 
