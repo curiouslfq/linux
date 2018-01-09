@@ -802,7 +802,7 @@ static int btrfsic_process_superblock_dev_mirror(
 	    btrfs_super_magic(super_tmp) != BTRFS_MAGIC ||
 	    memcmp(device->uuid, super_tmp->dev_item.uuid, BTRFS_UUID_SIZE) ||
 	    btrfs_super_nodesize(super_tmp) != state->metablock_size ||
-	    btrfs_super_sectorsize(super_tmp) != state->datablock_size) {
+	    btrfs_stack_super_sectorsize(super_tmp) != state->datablock_size) {
 		brelse(bh);
 		return 0;
 	}
