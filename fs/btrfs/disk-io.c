@@ -1919,7 +1919,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	btrfs_set_stack_backup_tree_root_level(root_backup,
 			       btrfs_header_level(info->tree_root->node));
 
-	btrfs_set_backup_chunk_root(root_backup, info->chunk_root->node->start);
+	btrfs_set_stack_backup_chunk_root(root_backup, info->chunk_root->node->start);
 	btrfs_set_backup_chunk_root_gen(root_backup,
 			       btrfs_header_generation(info->chunk_root->node));
 	btrfs_set_backup_chunk_root_level(root_backup,
