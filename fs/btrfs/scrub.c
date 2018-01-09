@@ -2182,7 +2182,7 @@ static int scrub_checksum_super(struct scrub_block *sblock)
 	s = (struct btrfs_super_block *)mapped_buffer;
 	memcpy(on_disk_csum, s->csum, sctx->csum_size);
 
-	if (sblock->pagev[0]->logical != btrfs_super_bytenr(s))
+	if (sblock->pagev[0]->logical != btrfs_stack_super_bytenr(s))
 		++fail_cor;
 
 	if (sblock->pagev[0]->generation != btrfs_super_generation(s))

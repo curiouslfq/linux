@@ -3165,7 +3165,7 @@ int btrfs_read_dev_one_super(struct block_device *bdev, int copy_num,
 		return -EIO;
 
 	super = (struct btrfs_super_block *)bh->b_data;
-	if (btrfs_super_bytenr(super) != bytenr ||
+	if (btrfs_stack_super_bytenr(super) != bytenr ||
 		    btrfs_super_magic(super) != BTRFS_MAGIC) {
 		brelse(bh);
 		return -EINVAL;
@@ -3242,7 +3242,7 @@ static int write_dev_supers(struct btrfs_device *device,
 		    device->commit_total_bytes)
 			break;
 
-		btrfs_set_super_bytenr(sb, bytenr);
+		btrfs_set_stack_super_bytenr(sb, bytenr);
 
 		crc = ~(u32)0;
 		crc = btrfs_csum_data((const char *)sb + BTRFS_CSUM_SIZE, crc,
@@ -4002,9 +4002,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 		ret = -EINVAL;
 	}
 
-	if (btrfs_super_bytenr(sb) != BTRFS_SUPER_INFO_OFFSET) {
+	if (btrfs_stack_super_bytenr(sb) != BTRFS_SUPER_INFO_OFFSET) {
 		btrfs_err(fs_info, "super offset mismatch %llu != %u",
-			  btrfs_super_bytenr(sb), BTRFS_SUPER_INFO_OFFSET);
+			  btrfs_stack_super_bytenr(sb), BTRFS_SUPER_INFO_OFFSET);
 		ret = -EINVAL;
 	}
 

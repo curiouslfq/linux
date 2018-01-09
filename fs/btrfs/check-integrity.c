@@ -798,7 +798,7 @@ static int btrfsic_process_superblock_dev_mirror(
 	super_tmp = (struct btrfs_super_block *)
 	    (bh->b_data + (dev_bytenr & (BTRFS_BDEV_BLOCKSIZE - 1)));
 
-	if (btrfs_super_bytenr(super_tmp) != dev_bytenr ||
+	if (btrfs_stack_super_bytenr(super_tmp) != dev_bytenr ||
 	    btrfs_super_magic(super_tmp) != BTRFS_MAGIC ||
 	    memcmp(device->uuid, super_tmp->dev_item.uuid, BTRFS_UUID_SIZE) ||
 	    btrfs_super_nodesize(super_tmp) != state->metablock_size ||
@@ -1778,7 +1778,7 @@ again:
 		struct btrfsic_block_link *l, *tmp;
 
 		if (block->is_superblock) {
-			bytenr = btrfs_super_bytenr((struct btrfs_super_block *)
+			bytenr = btrfs_stack_super_bytenr((struct btrfs_super_block *)
 						    mapped_datav[0]);
 			if (num_pages * PAGE_SIZE <
 			    BTRFS_SUPER_INFO_SIZE) {
