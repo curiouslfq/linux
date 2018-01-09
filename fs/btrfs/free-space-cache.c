@@ -828,7 +828,7 @@ int load_free_space_cache(struct btrfs_fs_info *fs_info,
 	struct btrfs_path *path;
 	int ret = 0;
 	bool matched;
-	u64 used = btrfs_block_group_used(&block_group->item);
+	u64 used = btrfs_stack_block_group_used(&block_group->item);
 
 	/*
 	 * If this block group has been marked to be cleared for one reason or

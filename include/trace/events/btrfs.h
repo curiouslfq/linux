@@ -640,7 +640,7 @@ TRACE_EVENT(btrfs_add_block_group,
 		__entry->size		= block_group->key.offset;
 		__entry->flags		= block_group->flags;
 		__entry->bytes_used	=
-			btrfs_block_group_used(&block_group->item);
+			btrfs_stack_block_group_used(&block_group->item);
 		__entry->bytes_super	= block_group->bytes_super;
 		__entry->create		= create;
 	),
