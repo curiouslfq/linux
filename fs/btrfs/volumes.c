@@ -602,7 +602,7 @@ static noinline int device_list_add(const char *path,
 	struct btrfs_fs_devices *fs_devices;
 	struct rcu_string *name;
 	int ret = 0;
-	u64 found_transid = btrfs_super_generation(disk_super);
+	u64 found_transid = btrfs_stack_super_generation(disk_super);
 
 	fs_devices = find_fsid(disk_super->fsid);
 	if (!fs_devices) {
@@ -991,7 +991,7 @@ static int __btrfs_open_devices(struct btrfs_fs_devices *fs_devices,
 			   BTRFS_UUID_SIZE))
 			goto error_brelse;
 
-		device->generation = btrfs_super_generation(disk_super);
+		device->generation = btrfs_stack_super_generation(disk_super);
 		if (!latest_dev ||
 		    device->generation > latest_dev->generation)
 			latest_dev = device;
@@ -1144,7 +1144,7 @@ int btrfs_scan_one_device(const char *path, fmode_t flags, void *holder,
 		goto error_bdev_put;
 
 	devid = btrfs_stack_device_id(&disk_super->dev_item);
-	transid = btrfs_super_generation(disk_super);
+	transid = btrfs_stack_super_generation(disk_super);
 	total_devices = btrfs_super_num_devices(disk_super);
 
 	ret = device_list_add(path, disk_super, devid, fs_devices_ret);

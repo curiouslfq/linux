@@ -1988,7 +1988,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	int newest = *backup_index;
 
 	if (*num_backups_tried == 0) {
-		u64 gen = btrfs_super_generation(super);
+		u64 gen = btrfs_stack_super_generation(super);
 
 		newest = find_newest_super_backup(info, gen);
 		if (newest == -1)
@@ -2008,7 +2008,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	}
 	root_backup = super->super_roots + newest;
 
-	btrfs_set_super_generation(super,
+	btrfs_set_stack_super_generation(super,
 				   btrfs_stack_backup_tree_root_gen(root_backup));
 	btrfs_set_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_super_root_level(super,
@@ -2635,7 +2635,7 @@ int open_ctree(struct super_block *sb,
 	 * run through our array of backup supers and setup
 	 * our ring pointer to the oldest one
 	 */
-	generation = btrfs_super_generation(disk_super);
+	generation = btrfs_stack_super_generation(disk_super);
 	find_oldest_super_backup(fs_info, generation);
 
 	/*
@@ -2786,7 +2786,7 @@ int open_ctree(struct super_block *sb,
 	}
 
 retry_root_backup:
-	generation = btrfs_super_generation(disk_super);
+	generation = btrfs_stack_super_generation(disk_super);
 
 	tree_root->node = read_tree_block(fs_info,
 					  btrfs_super_root(disk_super),
@@ -3197,10 +3197,10 @@ struct buffer_head *btrfs_read_dev_super(struct block_device *bdev)
 
 		super = (struct btrfs_super_block *)bh->b_data;
 
-		if (!latest || btrfs_super_generation(super) > transid) {
+		if (!latest || btrfs_stack_super_generation(super) > transid) {
 			brelse(latest);
 			latest = bh;
-			transid = btrfs_super_generation(super);
+			transid = btrfs_stack_super_generation(super);
 		} else {
 			brelse(bh);
 		}
@@ -4031,16 +4031,16 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	 * The generation is a global counter, we'll trust it more than the others
 	 * but it's still possible that it's the one that's wrong.
 	 */
-	if (btrfs_super_generation(sb) < btrfs_super_chunk_root_generation(sb))
+	if (btrfs_stack_super_generation(sb) < btrfs_super_chunk_root_generation(sb))
 		btrfs_warn(fs_info,
 			"suspicious: generation < chunk_root_generation: %llu < %llu",
-			btrfs_super_generation(sb),
+			btrfs_stack_super_generation(sb),
 			btrfs_super_chunk_root_generation(sb));
-	if (btrfs_super_generation(sb) < btrfs_super_cache_generation(sb)
+	if (btrfs_stack_super_generation(sb) < btrfs_super_cache_generation(sb)
 	    && btrfs_super_cache_generation(sb) != (u64)-1)
 		btrfs_warn(fs_info,
 			"suspicious: generation < cache_generation: %llu < %llu",
-			btrfs_super_generation(sb),
+			btrfs_stack_super_generation(sb),
 			btrfs_super_cache_generation(sb));
 
 	return ret;

@@ -2185,7 +2185,7 @@ static int scrub_checksum_super(struct scrub_block *sblock)
 	if (sblock->pagev[0]->logical != btrfs_stack_super_bytenr(s))
 		++fail_cor;
 
-	if (sblock->pagev[0]->generation != btrfs_super_generation(s))
+	if (sblock->pagev[0]->generation != btrfs_stack_super_generation(s))
 		++fail_gen;
 
 	if (!scrub_check_fsid(s->fsid, sblock->pagev[0]))

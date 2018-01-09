@@ -822,7 +822,7 @@ static int btrfsic_process_superblock_dev_mirror(
 		superblock_tmp->dev_bytenr = dev_bytenr;
 		superblock_tmp->dev_state = dev_state;
 		superblock_tmp->logical_bytenr = dev_bytenr;
-		superblock_tmp->generation = btrfs_super_generation(super_tmp);
+		superblock_tmp->generation = btrfs_stack_super_generation(super_tmp);
 		superblock_tmp->is_metadata = 1;
 		superblock_tmp->is_superblock = 1;
 		superblock_tmp->is_iodone = 1;
@@ -842,13 +842,13 @@ static int btrfsic_process_superblock_dev_mirror(
 	}
 
 	/* select the one with the highest generation field */
-	if (btrfs_super_generation(super_tmp) >
+	if (btrfs_stack_super_generation(super_tmp) >
 	    state->max_superblock_generation ||
 	    0 == state->max_superblock_generation) {
 		memcpy(selected_super, super_tmp, sizeof(*selected_super));
 		*selected_dev_state = dev_state;
 		state->max_superblock_generation =
-		    btrfs_super_generation(super_tmp);
+		    btrfs_stack_super_generation(super_tmp);
 		state->latest_superblock = superblock_tmp;
 	}
 
@@ -2192,7 +2192,7 @@ static int btrfsic_process_written_superblock(
 	struct btrfs_fs_info *fs_info = state->fs_info;
 	int pass;
 
-	superblock->generation = btrfs_super_generation(super_hdr);
+	superblock->generation = btrfs_stack_super_generation(super_hdr);
 	if (!(superblock->generation > state->max_superblock_generation ||
 	      0 == state->max_superblock_generation)) {
 		if (state->print_mask & BTRFSIC_PRINT_MASK_SUPERBLOCK_WRITE)
@@ -2200,7 +2200,7 @@ static int btrfsic_process_written_superblock(
 			       superblock->logical_bytenr,
 			       superblock->dev_state->name,
 			       superblock->dev_bytenr, superblock->mirror_num,
-			       btrfs_super_generation(super_hdr),
+			       btrfs_stack_super_generation(super_hdr),
 			       state->max_superblock_generation);
 	} else {
 		if (state->print_mask & BTRFSIC_PRINT_MASK_SUPERBLOCK_WRITE)
@@ -2208,11 +2208,11 @@ static int btrfsic_process_written_superblock(
 			       superblock->logical_bytenr,
 			       superblock->dev_state->name,
 			       superblock->dev_bytenr, superblock->mirror_num,
-			       btrfs_super_generation(super_hdr),
+			       btrfs_stack_super_generation(super_hdr),
 			       state->max_superblock_generation);
 
 		state->max_superblock_generation =
-		    btrfs_super_generation(super_hdr);
+		    btrfs_stack_super_generation(super_hdr);
 		state->latest_superblock = superblock;
 	}
 
