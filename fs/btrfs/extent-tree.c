@@ -5818,9 +5818,9 @@ static void update_global_block_rsv(struct btrfs_fs_info *fs_info)
 	 * checksum tree and the root tree.  If the fs is empty we want to set
 	 * it to a minimal amount for safety.
 	 */
-	num_bytes = btrfs_root_used(&fs_info->extent_root->root_item) +
-		btrfs_root_used(&fs_info->csum_root->root_item) +
-		btrfs_root_used(&fs_info->tree_root->root_item);
+	num_bytes = btrfs_stack_root_used(&fs_info->extent_root->root_item) +
+		btrfs_stack_root_used(&fs_info->csum_root->root_item) +
+		btrfs_stack_root_used(&fs_info->tree_root->root_item);
 	num_bytes = max_t(u64, num_bytes, SZ_16M);
 
 	spin_lock(&sinfo->lock);

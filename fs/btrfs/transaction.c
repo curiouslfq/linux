@@ -1128,12 +1128,12 @@ static int update_cowonly_root(struct btrfs_trans_handle *trans,
 	struct btrfs_fs_info *fs_info = root->fs_info;
 	struct btrfs_root *tree_root = fs_info->tree_root;
 
-	old_root_used = btrfs_root_used(&root->root_item);
+	old_root_used = btrfs_stack_root_used(&root->root_item);
 
 	while (1) {
 		old_root_bytenr = btrfs_stack_root_bytenr(&root->root_item);
 		if (old_root_bytenr == root->node->start &&
-		    old_root_used == btrfs_root_used(&root->root_item))
+		    old_root_used == btrfs_stack_root_used(&root->root_item))
 			break;
 
 		btrfs_set_root_node(&root->root_item, root->node);
@@ -1143,7 +1143,7 @@ static int update_cowonly_root(struct btrfs_trans_handle *trans,
 		if (ret)
 			return ret;
 
-		old_root_used = btrfs_root_used(&root->root_item);
+		old_root_used = btrfs_stack_root_used(&root->root_item);
 	}
 
 	return 0;
