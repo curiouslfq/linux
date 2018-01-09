@@ -2752,7 +2752,7 @@ int open_ctree(struct super_block *sb,
 	__setup_root(chunk_root, fs_info, BTRFS_CHUNK_TREE_OBJECTID);
 
 	chunk_root->node = read_tree_block(fs_info,
-					   btrfs_super_chunk_root(disk_super),
+					   btrfs_stack_super_chunk_root(disk_super),
 					   generation);
 	if (IS_ERR(chunk_root->node) ||
 	    !extent_buffer_uptodate(chunk_root->node)) {
@@ -3962,9 +3962,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 			   btrfs_stack_super_root(sb));
 		ret = -EINVAL;
 	}
-	if (!IS_ALIGNED(btrfs_super_chunk_root(sb), sectorsize)) {
+	if (!IS_ALIGNED(btrfs_stack_super_chunk_root(sb), sectorsize)) {
 		btrfs_warn(fs_info, "chunk_root block unaligned: %llu",
-			   btrfs_super_chunk_root(sb));
+			   btrfs_stack_super_chunk_root(sb));
 		ret = -EINVAL;
 	}
 	if (!IS_ALIGNED(btrfs_super_log_root(sb), sectorsize)) {

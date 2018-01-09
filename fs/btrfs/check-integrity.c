@@ -698,7 +698,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
 				pr_info("root@%llu\n", next_bytenr);
 			break;
 		case 1:
-			next_bytenr = btrfs_super_chunk_root(selected_super);
+			next_bytenr = btrfs_stack_super_chunk_root(selected_super);
 			if (state->print_mask &
 			    BTRFSIC_PRINT_MASK_ROOT_CHUNK_LOG_TREE_LOCATION)
 				pr_info("chunk@%llu\n", next_bytenr);
@@ -872,7 +872,7 @@ static int btrfsic_process_superblock_dev_mirror(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_CHUNK_TREE_OBJECTID);
 			additional_string = "initial chunk ";
-			next_bytenr = btrfs_super_chunk_root(super_tmp);
+			next_bytenr = btrfs_stack_super_chunk_root(super_tmp);
 			break;
 		case 2:
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
@@ -2245,7 +2245,7 @@ static int btrfsic_process_written_superblock(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_CHUNK_TREE_OBJECTID);
 			additional_string = "chunk ";
-			next_bytenr = btrfs_super_chunk_root(super_hdr);
+			next_bytenr = btrfs_stack_super_chunk_root(super_hdr);
 			if (state->print_mask &
 			    BTRFSIC_PRINT_MASK_ROOT_CHUNK_LOG_TREE_LOCATION)
 				pr_info("chunk@%llu\n", next_bytenr);
