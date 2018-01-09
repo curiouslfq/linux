@@ -3252,7 +3252,7 @@ static noinline int check_committed_ref(struct btrfs_root *root,
 		goto out;
 
 	if (btrfs_extent_generation(leaf, ei) <=
-	    btrfs_root_last_snapshot(&root->root_item))
+	    btrfs_stack_root_last_snapshot(&root->root_item))
 		goto out;
 
 	iref = (struct btrfs_extent_inline_ref *)(ei + 1);

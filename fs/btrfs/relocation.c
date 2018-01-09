@@ -538,7 +538,7 @@ static int should_ignore_root(struct btrfs_root *root)
 	if (!reloc_root)
 		return 0;
 
-	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
+	if (btrfs_stack_root_last_snapshot(&reloc_root->root_item) ==
 	    root->fs_info->running_transaction->transid - 1)
 		return 0;
 	/*
@@ -1420,7 +1420,7 @@ static struct btrfs_root *create_reloc_root(struct btrfs_trans_handle *trans,
 		 * it's created before the transaction commit is started.
 		 */
 		commit_root_gen = btrfs_header_generation(root->commit_root);
-		btrfs_set_root_last_snapshot(&root->root_item, commit_root_gen);
+		btrfs_set_stack_root_last_snapshot(&root->root_item, commit_root_gen);
 	} else {
 		/*
 		 * called by btrfs_reloc_post_snapshot_hook.
@@ -1810,7 +1810,7 @@ int replace_path(struct btrfs_trans_handle *trans,
 	BUG_ON(src->root_key.objectid != BTRFS_TREE_RELOC_OBJECTID);
 	BUG_ON(dest->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID);
 
-	last_snapshot = btrfs_root_last_snapshot(&src->root_item);
+	last_snapshot = btrfs_stack_root_last_snapshot(&src->root_item);
 again:
 	slot = path->slots[lowest_level];
 	btrfs_node_key_to_cpu(path->nodes[lowest_level], &key, slot);
@@ -1993,7 +1993,7 @@ int walk_up_reloc_tree(struct btrfs_root *root, struct btrfs_path *path,
 	u64 last_snapshot;
 	u32 nritems;
 
-	last_snapshot = btrfs_root_last_snapshot(&root->root_item);
+	last_snapshot = btrfs_stack_root_last_snapshot(&root->root_item);
 
 	for (i = 0; i < *level; i++) {
 		free_extent_buffer(path->nodes[i]);
@@ -2033,7 +2033,7 @@ int walk_down_reloc_tree(struct btrfs_root *root, struct btrfs_path *path,
 	u64 last_snapshot;
 	u32 nritems;
 
-	last_snapshot = btrfs_root_last_snapshot(&root->root_item);
+	last_snapshot = btrfs_stack_root_last_snapshot(&root->root_item);
 
 	for (i = *level; i > 0; i--) {
 		eb = path->nodes[i];
@@ -4697,7 +4697,7 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
 
 	level = btrfs_header_level(buf);
 	if (btrfs_header_generation(buf) <=
-	    btrfs_root_last_snapshot(&root->root_item))
+	    btrfs_stack_root_last_snapshot(&root->root_item))
 		first_cow = 1;
 
 	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID &&

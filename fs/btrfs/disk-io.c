@@ -1282,7 +1282,7 @@ struct btrfs_root *btrfs_create_tree(struct btrfs_trans_handle *trans,
 	btrfs_set_stack_root_level(&root->root_item, 0);
 	btrfs_set_stack_root_refs(&root->root_item, 1);
 	btrfs_set_stack_root_used(&root->root_item, leaf->len);
-	btrfs_set_root_last_snapshot(&root->root_item, 0);
+	btrfs_set_stack_root_last_snapshot(&root->root_item, 0);
 	btrfs_set_stack_root_dirid(&root->root_item, 0);
 	uuid_le_gen(&uuid);
 	memcpy(root->root_item.uuid, uuid.b, BTRFS_UUID_SIZE);
