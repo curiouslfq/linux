@@ -692,7 +692,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
 
 		switch (pass) {
 		case 0:
-			next_bytenr = btrfs_super_root(selected_super);
+			next_bytenr = btrfs_stack_super_root(selected_super);
 			if (state->print_mask &
 			    BTRFSIC_PRINT_MASK_ROOT_CHUNK_LOG_TREE_LOCATION)
 				pr_info("root@%llu\n", next_bytenr);
@@ -866,7 +866,7 @@ static int btrfsic_process_superblock_dev_mirror(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_ROOT_TREE_OBJECTID);
 			additional_string = "initial root ";
-			next_bytenr = btrfs_super_root(super_tmp);
+			next_bytenr = btrfs_stack_super_root(super_tmp);
 			break;
 		case 1:
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
@@ -2236,7 +2236,7 @@ static int btrfsic_process_written_superblock(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_ROOT_TREE_OBJECTID);
 			additional_string = "root ";
-			next_bytenr = btrfs_super_root(super_hdr);
+			next_bytenr = btrfs_stack_super_root(super_hdr);
 			if (state->print_mask &
 			    BTRFSIC_PRINT_MASK_ROOT_CHUNK_LOG_TREE_LOCATION)
 				pr_info("root@%llu\n", next_bytenr);

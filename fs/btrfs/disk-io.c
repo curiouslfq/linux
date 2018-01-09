@@ -2010,7 +2010,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 
 	btrfs_set_stack_super_generation(super,
 				   btrfs_stack_backup_tree_root_gen(root_backup));
-	btrfs_set_super_root(super, btrfs_stack_backup_tree_root(root_backup));
+	btrfs_set_stack_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_super_root_level(super,
 				   btrfs_stack_backup_tree_root_level(root_backup));
 	btrfs_set_super_bytes_used(super, btrfs_stack_backup_bytes_used(root_backup));
@@ -2624,7 +2624,7 @@ int open_ctree(struct super_block *sb,
 	}
 
 	disk_super = fs_info->super_copy;
-	if (!btrfs_super_root(disk_super))
+	if (!btrfs_stack_super_root(disk_super))
 		goto fail_alloc;
 
 	/* check FS state, whether FS is broken. */
@@ -2789,7 +2789,7 @@ retry_root_backup:
 	generation = btrfs_stack_super_generation(disk_super);
 
 	tree_root->node = read_tree_block(fs_info,
-					  btrfs_super_root(disk_super),
+					  btrfs_stack_super_root(disk_super),
 					  generation);
 	if (IS_ERR(tree_root->node) ||
 	    !extent_buffer_uptodate(tree_root->node)) {
@@ -3957,9 +3957,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	}
 
 	/* Root alignment check */
-	if (!IS_ALIGNED(btrfs_super_root(sb), sectorsize)) {
+	if (!IS_ALIGNED(btrfs_stack_super_root(sb), sectorsize)) {
 		btrfs_warn(fs_info, "tree_root block unaligned: %llu",
-			   btrfs_super_root(sb));
+			   btrfs_stack_super_root(sb));
 		ret = -EINVAL;
 	}
 	if (!IS_ALIGNED(btrfs_super_chunk_root(sb), sectorsize)) {

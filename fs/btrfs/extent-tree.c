@@ -10828,7 +10828,7 @@ int btrfs_init_space_info(struct btrfs_fs_info *fs_info)
 	int ret;
 
 	disk_super = fs_info->super_copy;
-	if (!btrfs_super_root(disk_super))
+	if (!btrfs_stack_super_root(disk_super))
 		return -EINVAL;
 
 	features = btrfs_super_incompat_flags(disk_super);
