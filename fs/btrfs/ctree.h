@@ -2145,7 +2145,7 @@ static inline bool btrfs_root_dead(const struct btrfs_root *root)
 }
 
 /* struct btrfs_root_backup */
-BTRFS_SETGET_STACK_FUNCS(backup_tree_root, struct btrfs_root_backup,
+BTRFS_SETGET_STACK_FUNCS(stack_backup_tree_root, struct btrfs_root_backup,
 		   tree_root, 64);
 BTRFS_SETGET_STACK_FUNCS(backup_tree_root_gen, struct btrfs_root_backup,
 		   tree_root_gen, 64);

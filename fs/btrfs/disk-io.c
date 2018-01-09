@@ -1912,7 +1912,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 
 	info->backup_root_index = (next_backup + 1) % BTRFS_NUM_BACKUP_ROOTS;
 
-	btrfs_set_backup_tree_root(root_backup, info->tree_root->node->start);
+	btrfs_set_stack_backup_tree_root(root_backup, info->tree_root->node->start);
 	btrfs_set_backup_tree_root_gen(root_backup,
 			       btrfs_header_generation(info->tree_root->node));
 
@@ -2010,7 +2010,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 
 	btrfs_set_super_generation(super,
 				   btrfs_backup_tree_root_gen(root_backup));
-	btrfs_set_super_root(super, btrfs_backup_tree_root(root_backup));
+	btrfs_set_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_super_root_level(super,
 				   btrfs_backup_tree_root_level(root_backup));
 	btrfs_set_super_bytes_used(super, btrfs_backup_bytes_used(root_backup));
