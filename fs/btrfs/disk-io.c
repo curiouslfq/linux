@@ -1926,7 +1926,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 			       btrfs_header_level(info->chunk_root->node));
 
 	btrfs_set_stack_backup_extent_root(root_backup, info->extent_root->node->start);
-	btrfs_set_backup_extent_root_gen(root_backup,
+	btrfs_set_stack_backup_extent_root_gen(root_backup,
 			       btrfs_header_generation(info->extent_root->node));
 	btrfs_set_backup_extent_root_level(root_backup,
 			       btrfs_header_level(info->extent_root->node));
