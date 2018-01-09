@@ -5522,7 +5522,7 @@ static int fixup_tree_root_location(struct btrfs_fs_info *fs_info,
 	}
 
 	*sub_root = new_root;
-	location->objectid = btrfs_root_dirid(&new_root->root_item);
+	location->objectid = btrfs_stack_root_dirid(&new_root->root_item);
 	location->type = BTRFS_INODE_ITEM_KEY;
 	location->offset = 0;
 	err = 0;

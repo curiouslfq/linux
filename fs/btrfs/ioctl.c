@@ -530,7 +530,7 @@ static noinline int create_subvol(struct inode *dir,
 	free_extent_buffer(leaf);
 	leaf = NULL;
 
-	btrfs_set_root_dirid(root_item, new_dirid);
+	btrfs_set_stack_root_dirid(root_item, new_dirid);
 
 	key.objectid = objectid;
 	key.offset = 0;
