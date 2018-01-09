@@ -2747,7 +2747,7 @@ int open_ctree(struct super_block *sb,
 		goto fail_sb_buffer;
 	}
 
-	generation = btrfs_super_chunk_root_generation(disk_super);
+	generation = btrfs_stack_super_chunk_root_generation(disk_super);
 
 	__setup_root(chunk_root, fs_info, BTRFS_CHUNK_TREE_OBJECTID);
 
@@ -4031,11 +4031,11 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	 * The generation is a global counter, we'll trust it more than the others
 	 * but it's still possible that it's the one that's wrong.
 	 */
-	if (btrfs_stack_super_generation(sb) < btrfs_super_chunk_root_generation(sb))
+	if (btrfs_stack_super_generation(sb) < btrfs_stack_super_chunk_root_generation(sb))
 		btrfs_warn(fs_info,
 			"suspicious: generation < chunk_root_generation: %llu < %llu",
 			btrfs_stack_super_generation(sb),
-			btrfs_super_chunk_root_generation(sb));
+			btrfs_stack_super_chunk_root_generation(sb));
 	if (btrfs_stack_super_generation(sb) < btrfs_super_cache_generation(sb)
 	    && btrfs_super_cache_generation(sb) != (u64)-1)
 		btrfs_warn(fs_info,

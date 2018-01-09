@@ -2286,7 +2286,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_generation, struct btrfs_super_block,
 BTRFS_SETGET_STACK_FUNCS(stack_super_root, struct btrfs_super_block, root, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_super_sys_array_size,
 			 struct btrfs_super_block, sys_chunk_array_size, 32);
-BTRFS_SETGET_STACK_FUNCS(super_chunk_root_generation,
+BTRFS_SETGET_STACK_FUNCS(stack_super_chunk_root_generation,
 			 struct btrfs_super_block, chunk_root_generation, 64);
 BTRFS_SETGET_STACK_FUNCS(super_root_level, struct btrfs_super_block,
 			 root_level, 8);
