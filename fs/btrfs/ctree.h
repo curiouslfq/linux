@@ -2302,7 +2302,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_log_root_level, struct btrfs_super_block,
 			 log_root_level, 8);
 BTRFS_SETGET_STACK_FUNCS(stack_super_total_bytes, struct btrfs_super_block,
 			 total_bytes, 64);
-BTRFS_SETGET_STACK_FUNCS(super_bytes_used, struct btrfs_super_block,
+BTRFS_SETGET_STACK_FUNCS(stack_super_bytes_used, struct btrfs_super_block,
 			 bytes_used, 64);
 BTRFS_SETGET_STACK_FUNCS(super_sectorsize, struct btrfs_super_block,
 			 sectorsize, 32);

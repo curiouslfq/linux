@@ -1959,7 +1959,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	btrfs_set_stack_backup_total_bytes(root_backup,
 			     btrfs_stack_super_total_bytes(info->super_copy));
 	btrfs_set_stack_backup_bytes_used(root_backup,
-			     btrfs_super_bytes_used(info->super_copy));
+			     btrfs_stack_super_bytes_used(info->super_copy));
 	btrfs_set_stack_backup_num_devices(root_backup,
 			     btrfs_super_num_devices(info->super_copy));
 
@@ -2013,7 +2013,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	btrfs_set_stack_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_stack_super_root_level(super,
 				   btrfs_stack_backup_tree_root_level(root_backup));
-	btrfs_set_super_bytes_used(super, btrfs_stack_backup_bytes_used(root_backup));
+	btrfs_set_stack_super_bytes_used(super, btrfs_stack_backup_bytes_used(root_backup));
 
 	/*
 	 * fixme: the total bytes and num_devices need to match or we should
@@ -3984,9 +3984,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	 * Hint to catch really bogus numbers, bitflips or so, more exact checks are
 	 * done later
 	 */
-	if (btrfs_super_bytes_used(sb) < 6 * btrfs_super_nodesize(sb)) {
+	if (btrfs_stack_super_bytes_used(sb) < 6 * btrfs_super_nodesize(sb)) {
 		btrfs_err(fs_info, "bytes_used is too small %llu",
-			  btrfs_super_bytes_used(sb));
+			  btrfs_stack_super_bytes_used(sb));
 		ret = -EINVAL;
 	}
 	if (!is_power_of_2(btrfs_super_stripesize(sb))) {

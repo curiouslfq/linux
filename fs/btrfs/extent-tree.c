@@ -6246,12 +6246,12 @@ static int update_block_group(struct btrfs_trans_handle *trans,
 
 	/* block accounting for super block */
 	spin_lock(&info->delalloc_root_lock);
-	old_val = btrfs_super_bytes_used(info->super_copy);
+	old_val = btrfs_stack_super_bytes_used(info->super_copy);
 	if (alloc)
 		old_val += num_bytes;
 	else
 		old_val -= num_bytes;
-	btrfs_set_super_bytes_used(info->super_copy, old_val);
+	btrfs_set_stack_super_bytes_used(info->super_copy, old_val);
 	spin_unlock(&info->delalloc_root_lock);
 
 	while (total) {
