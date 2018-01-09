@@ -903,7 +903,7 @@ again:
 		if (!test_bit(BTRFS_ROOT_REF_COWS, &root->state))
 			cur->cowonly = 1;
 
-		if (btrfs_root_level(&root->root_item) == cur->level) {
+		if (btrfs_stack_root_level(&root->root_item) == cur->level) {
 			/* tree root */
 			ASSERT(btrfs_stack_root_bytenr(&root->root_item) ==
 			       cur->bytenr);
@@ -1436,7 +1436,7 @@ static struct btrfs_root *create_reloc_root(struct btrfs_trans_handle *trans,
 
 	memcpy(root_item, &root->root_item, sizeof(*root_item));
 	btrfs_set_stack_root_bytenr(root_item, eb->start);
-	btrfs_set_root_level(root_item, btrfs_header_level(eb));
+	btrfs_set_stack_root_level(root_item, btrfs_header_level(eb));
 	btrfs_set_stack_root_generation(root_item, trans->transid);
 
 	if (root->root_key.objectid == objectid) {
@@ -2193,7 +2193,7 @@ static noinline_for_stack int merge_reloc_root(struct reloc_control *rc,
 	root_item = &reloc_root->root_item;
 
 	if (btrfs_stack_disk_key_objectid(&root_item->drop_progress) == 0) {
-		level = btrfs_root_level(root_item);
+		level = btrfs_stack_root_level(root_item);
 		extent_buffer_get(reloc_root->node);
 		path->nodes[level] = reloc_root->node;
 		path->slots[level] = 0;

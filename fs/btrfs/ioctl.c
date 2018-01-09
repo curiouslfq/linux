@@ -511,7 +511,7 @@ static noinline int create_subvol(struct inode *dir,
 
 	btrfs_set_stack_root_bytenr(root_item, leaf->start);
 	btrfs_set_stack_root_generation(root_item, trans->transid);
-	btrfs_set_root_level(root_item, 0);
+	btrfs_set_stack_root_level(root_item, 0);
 	btrfs_set_root_refs(root_item, 1);
 	btrfs_set_root_used(root_item, leaf->len);
 	btrfs_set_root_last_snapshot(root_item, 0);
