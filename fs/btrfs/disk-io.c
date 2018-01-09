@@ -1936,7 +1936,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	 * the fs_root.  Make sure it is valid before we fill it in.
 	 */
 	if (info->fs_root && info->fs_root->node) {
-		btrfs_set_backup_fs_root(root_backup,
+		btrfs_set_stack_backup_fs_root(root_backup,
 					 info->fs_root->node->start);
 		btrfs_set_backup_fs_root_gen(root_backup,
 			       btrfs_header_generation(info->fs_root->node));
