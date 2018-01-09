@@ -1944,7 +1944,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 			       btrfs_header_level(info->fs_root->node));
 	}
 
-	btrfs_set_backup_dev_root(root_backup, info->dev_root->node->start);
+	btrfs_set_stack_backup_dev_root(root_backup, info->dev_root->node->start);
 	btrfs_set_backup_dev_root_gen(root_backup,
 			       btrfs_header_generation(info->dev_root->node));
 	btrfs_set_backup_dev_root_level(root_backup,
