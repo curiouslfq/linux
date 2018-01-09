@@ -2325,7 +2325,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_csum_type, struct btrfs_super_block,
 BTRFS_SETGET_STACK_FUNCS(stack_super_cache_generation, struct btrfs_super_block,
 			 cache_generation, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_super_magic, struct btrfs_super_block, magic, 64);
-BTRFS_SETGET_STACK_FUNCS(super_uuid_tree_generation, struct btrfs_super_block,
+BTRFS_SETGET_STACK_FUNCS(stack_super_uuid_tree_generation, struct btrfs_super_block,
 			 uuid_tree_generation, 64);
 
 static inline int btrfs_super_csum_size(const struct btrfs_super_block *s)

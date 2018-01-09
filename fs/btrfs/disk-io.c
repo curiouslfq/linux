@@ -3034,7 +3034,7 @@ retry_root_backup:
 		}
 	} else if (btrfs_test_opt(fs_info, RESCAN_UUID_TREE) ||
 		   fs_info->generation !=
-				btrfs_super_uuid_tree_generation(disk_super)) {
+				btrfs_stack_super_uuid_tree_generation(disk_super)) {
 		btrfs_info(fs_info, "checking UUID tree");
 		ret = btrfs_check_uuid_tree(fs_info);
 		if (ret) {
