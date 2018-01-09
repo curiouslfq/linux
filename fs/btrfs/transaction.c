@@ -1543,7 +1543,7 @@ static noinline int create_pending_snapshot(struct btrfs_trans_handle *trans,
 		root_flags &= ~BTRFS_ROOT_SUBVOL_RDONLY;
 	btrfs_set_stack_root_flags(new_root_item, root_flags);
 
-	btrfs_set_root_generation_v2(new_root_item,
+	btrfs_set_stack_root_generation_v2(new_root_item,
 			trans->transid);
 	uuid_le_gen(&new_uuid);
 	memcpy(new_root_item->uuid, new_uuid.b, BTRFS_UUID_SIZE);

@@ -2123,7 +2123,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_root_used, struct btrfs_root_item, bytes_used, 64
 BTRFS_SETGET_STACK_FUNCS(stack_root_limit, struct btrfs_root_item, byte_limit, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_root_last_snapshot, struct btrfs_root_item,
 			 last_snapshot, 64);
-BTRFS_SETGET_STACK_FUNCS(root_generation_v2, struct btrfs_root_item,
+BTRFS_SETGET_STACK_FUNCS(stack_root_generation_v2, struct btrfs_root_item,
 			 generation_v2, 64);
 BTRFS_SETGET_STACK_FUNCS(root_ctransid, struct btrfs_root_item,
 			 ctransid, 64);

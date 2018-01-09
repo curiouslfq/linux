@@ -516,7 +516,7 @@ static noinline int create_subvol(struct inode *dir,
 	btrfs_set_stack_root_used(root_item, leaf->len);
 	btrfs_set_stack_root_last_snapshot(root_item, 0);
 
-	btrfs_set_root_generation_v2(root_item,
+	btrfs_set_stack_root_generation_v2(root_item,
 			btrfs_stack_root_generation(root_item));
 	uuid_le_gen(&new_uuid);
 	memcpy(root_item->uuid, new_uuid.b, BTRFS_UUID_SIZE);
