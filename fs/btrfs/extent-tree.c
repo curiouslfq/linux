@@ -10023,7 +10023,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
 		return -ENOMEM;
 	path->reada = READA_FORWARD;
 
-	cache_gen = btrfs_super_cache_generation(info->super_copy);
+	cache_gen = btrfs_stack_super_cache_generation(info->super_copy);
 	if (btrfs_test_opt(info, SPACE_CACHE) &&
 	    btrfs_stack_super_generation(info->super_copy) != cache_gen)
 		need_clear = 1;

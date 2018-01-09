@@ -4036,12 +4036,12 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 			"suspicious: generation < chunk_root_generation: %llu < %llu",
 			btrfs_stack_super_generation(sb),
 			btrfs_stack_super_chunk_root_generation(sb));
-	if (btrfs_stack_super_generation(sb) < btrfs_super_cache_generation(sb)
-	    && btrfs_super_cache_generation(sb) != (u64)-1)
+	if (btrfs_stack_super_generation(sb) < btrfs_stack_super_cache_generation(sb)
+	    && btrfs_stack_super_cache_generation(sb) != (u64)-1)
 		btrfs_warn(fs_info,
 			"suspicious: generation < cache_generation: %llu < %llu",
 			btrfs_stack_super_generation(sb),
-			btrfs_super_cache_generation(sb));
+			btrfs_stack_super_cache_generation(sb));
 
 	return ret;
 }
