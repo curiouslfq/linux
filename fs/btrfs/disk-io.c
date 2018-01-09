@@ -1953,7 +1953,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	btrfs_set_stack_backup_csum_root(root_backup, info->csum_root->node->start);
 	btrfs_set_stack_backup_csum_root_gen(root_backup,
 			       btrfs_header_generation(info->csum_root->node));
-	btrfs_set_backup_csum_root_level(root_backup,
+	btrfs_set_stack_backup_csum_root_level(root_backup,
 			       btrfs_header_level(info->csum_root->node));
 
 	btrfs_set_backup_total_bytes(root_backup,
