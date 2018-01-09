@@ -1862,7 +1862,7 @@ static noinline int may_destroy_subvol(struct btrfs_root *root)
 		return -ENOMEM;
 
 	/* Make sure this root isn't set as the default subvol */
-	dir_id = btrfs_super_root_dir(fs_info->super_copy);
+	dir_id = btrfs_stack_super_root_dir(fs_info->super_copy);
 	di = btrfs_lookup_dir_item(NULL, fs_info->tree_root, path,
 				   dir_id, "default", 7, 0);
 	if (di && !IS_ERR(di)) {
@@ -4070,7 +4070,7 @@ static long btrfs_ioctl_default_subvol(struct file *file, void __user *argp)
 		goto out;
 	}
 
-	dir_id = btrfs_super_root_dir(fs_info->super_copy);
+	dir_id = btrfs_stack_super_root_dir(fs_info->super_copy);
 	di = btrfs_lookup_dir_item(trans, fs_info->tree_root, path,
 				   dir_id, "default", 7, 1);
 	if (IS_ERR_OR_NULL(di)) {
