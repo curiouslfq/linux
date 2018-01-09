@@ -5351,7 +5351,7 @@ static int btrfs_ioctl_get_features(struct file *file, void __user *arg)
 	struct btrfs_super_block *super_block = fs_info->super_copy;
 	struct btrfs_ioctl_feature_flags features;
 
-	features.compat_flags = btrfs_super_compat_flags(super_block);
+	features.compat_flags = btrfs_stack_super_compat_flags(super_block);
 	features.compat_ro_flags = btrfs_super_compat_ro_flags(super_block);
 	features.incompat_flags = btrfs_super_incompat_flags(super_block);
 
@@ -5474,10 +5474,10 @@ static int btrfs_ioctl_set_features(struct file *file, void __user *arg)
 	}
 
 	spin_lock(&fs_info->super_lock);
-	newflags = btrfs_super_compat_flags(super_block);
+	newflags = btrfs_stack_super_compat_flags(super_block);
 	newflags |= flags[0].compat_flags & flags[1].compat_flags;
 	newflags &= ~(flags[0].compat_flags & ~flags[1].compat_flags);
-	btrfs_set_super_compat_flags(super_block, newflags);
+	btrfs_set_stack_super_compat_flags(super_block, newflags);
 
 	newflags = btrfs_super_compat_ro_flags(super_block);
 	newflags |= flags[0].compat_ro_flags & flags[1].compat_ro_flags;

@@ -40,7 +40,7 @@ static u64 get_features(struct btrfs_fs_info *fs_info,
 {
 	struct btrfs_super_block *disk_super = fs_info->super_copy;
 	if (set == FEAT_COMPAT)
-		return btrfs_super_compat_flags(disk_super);
+		return btrfs_stack_super_compat_flags(disk_super);
 	else if (set == FEAT_COMPAT_RO)
 		return btrfs_super_compat_ro_flags(disk_super);
 	else
@@ -52,7 +52,7 @@ static void set_features(struct btrfs_fs_info *fs_info,
 {
 	struct btrfs_super_block *disk_super = fs_info->super_copy;
 	if (set == FEAT_COMPAT)
-		btrfs_set_super_compat_flags(disk_super, features);
+		btrfs_set_stack_super_compat_flags(disk_super, features);
 	else if (set == FEAT_COMPAT_RO)
 		btrfs_set_super_compat_ro_flags(disk_super, features);
 	else
