@@ -2312,7 +2312,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_super_stripesize, struct btrfs_super_block,
 			 stripesize, 32);
 BTRFS_SETGET_STACK_FUNCS(stack_super_root_dir, struct btrfs_super_block,
 			 root_dir_objectid, 64);
-BTRFS_SETGET_STACK_FUNCS(super_num_devices, struct btrfs_super_block,
+BTRFS_SETGET_STACK_FUNCS(stack_super_num_devices, struct btrfs_super_block,
 			 num_devices, 64);
 BTRFS_SETGET_STACK_FUNCS(super_compat_flags, struct btrfs_super_block,
 			 compat_flags, 64);

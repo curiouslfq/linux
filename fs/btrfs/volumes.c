@@ -1145,7 +1145,7 @@ int btrfs_scan_one_device(const char *path, fmode_t flags, void *holder,
 
 	devid = btrfs_stack_device_id(&disk_super->dev_item);
 	transid = btrfs_stack_super_generation(disk_super);
-	total_devices = btrfs_super_num_devices(disk_super);
+	total_devices = btrfs_stack_super_num_devices(disk_super);
 
 	ret = device_list_add(path, disk_super, devid, fs_devices_ret);
 	if (ret > 0) {
@@ -1940,8 +1940,8 @@ int btrfs_rm_device(struct btrfs_fs_info *fs_info, const char *device_path,
 		btrfs_sysfs_rm_device_link(fs_info->fs_devices, device);
 	}
 
-	num_devices = btrfs_super_num_devices(fs_info->super_copy) - 1;
-	btrfs_set_super_num_devices(fs_info->super_copy, num_devices);
+	num_devices = btrfs_stack_super_num_devices(fs_info->super_copy) - 1;
+	btrfs_set_stack_super_num_devices(fs_info->super_copy, num_devices);
 	mutex_unlock(&fs_info->fs_devices->device_list_mutex);
 
 	/*
@@ -2424,8 +2424,8 @@ int btrfs_init_new_device(struct btrfs_fs_info *fs_info, const char *device_path
 	btrfs_set_stack_super_total_bytes(fs_info->super_copy,
 		round_down(tmp + device->total_bytes, fs_info->sectorsize));
 
-	tmp = btrfs_super_num_devices(fs_info->super_copy);
-	btrfs_set_super_num_devices(fs_info->super_copy, tmp + 1);
+	tmp = btrfs_stack_super_num_devices(fs_info->super_copy);
+	btrfs_set_stack_super_num_devices(fs_info->super_copy, tmp + 1);
 
 	/* add sysfs device entry */
 	btrfs_sysfs_add_device_link(fs_info->fs_devices, device);
@@ -6906,7 +6906,7 @@ int btrfs_read_chunk_tree(struct btrfs_fs_info *fs_info)
 	if (total_dev != fs_info->fs_devices->total_devices) {
 		btrfs_err(fs_info,
 	   "super_num_devices %llu mismatch with num_devices %llu found here",
-			  btrfs_super_num_devices(fs_info->super_copy),
+			  btrfs_stack_super_num_devices(fs_info->super_copy),
 			  total_dev);
 		ret = -EINVAL;
 		goto error;

@@ -1961,7 +1961,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 	btrfs_set_stack_backup_bytes_used(root_backup,
 			     btrfs_stack_super_bytes_used(info->super_copy));
 	btrfs_set_stack_backup_num_devices(root_backup,
-			     btrfs_super_num_devices(info->super_copy));
+			     btrfs_stack_super_num_devices(info->super_copy));
 
 	/*
 	 * if we don't copy this out to the super_copy, it won't get remembered
@@ -2020,7 +2020,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	 * need a fsck
 	 */
 	btrfs_set_stack_super_total_bytes(super, btrfs_stack_backup_total_bytes(root_backup));
-	btrfs_set_super_num_devices(super, btrfs_stack_backup_num_devices(root_backup));
+	btrfs_set_stack_super_num_devices(super, btrfs_stack_backup_num_devices(root_backup));
 	return 0;
 }
 
@@ -2732,7 +2732,7 @@ int open_ctree(struct super_block *sb,
 	sb->s_bdi->congested_data = fs_info;
 	sb->s_bdi->capabilities |= BDI_CAP_CGROUP_WRITEBACK;
 	sb->s_bdi->ra_pages = VM_MAX_READAHEAD * SZ_1K / PAGE_SIZE;
-	sb->s_bdi->ra_pages *= btrfs_super_num_devices(disk_super);
+	sb->s_bdi->ra_pages *= btrfs_stack_super_num_devices(disk_super);
 	sb->s_bdi->ra_pages = max(sb->s_bdi->ra_pages, SZ_4M / PAGE_SIZE);
 
 	sb->s_blocksize = sectorsize;
@@ -3495,7 +3495,7 @@ int write_all_supers(struct btrfs_fs_info *fs_info, int max_mirrors)
 
 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
 	head = &fs_info->fs_devices->devices;
-	max_errors = btrfs_super_num_devices(fs_info->super_copy) - 1;
+	max_errors = btrfs_stack_super_num_devices(fs_info->super_copy) - 1;
 
 	if (do_barriers) {
 		ret = barrier_all_devices(fs_info);
@@ -3994,10 +3994,10 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 			  btrfs_stack_super_stripesize(sb));
 		ret = -EINVAL;
 	}
-	if (btrfs_super_num_devices(sb) > (1UL << 31))
+	if (btrfs_stack_super_num_devices(sb) > (1UL << 31))
 		btrfs_warn(fs_info, "suspicious number of devices: %llu",
-			   btrfs_super_num_devices(sb));
-	if (btrfs_super_num_devices(sb) == 0) {
+			   btrfs_stack_super_num_devices(sb));
+	if (btrfs_stack_super_num_devices(sb) == 0) {
 		btrfs_err(fs_info, "number of devices is 0");
 		ret = -EINVAL;
 	}
