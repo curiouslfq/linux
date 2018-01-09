@@ -2011,7 +2011,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	btrfs_set_stack_super_generation(super,
 				   btrfs_stack_backup_tree_root_gen(root_backup));
 	btrfs_set_stack_super_root(super, btrfs_stack_backup_tree_root(root_backup));
-	btrfs_set_super_root_level(super,
+	btrfs_set_stack_super_root_level(super,
 				   btrfs_stack_backup_tree_root_level(root_backup));
 	btrfs_set_super_bytes_used(super, btrfs_stack_backup_bytes_used(root_backup));
 
@@ -3913,9 +3913,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 	if (btrfs_stack_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP)
 		btrfs_warn(fs_info, "unrecognized super flag: %llu",
 				btrfs_stack_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP);
-	if (btrfs_super_root_level(sb) >= BTRFS_MAX_LEVEL) {
+	if (btrfs_stack_super_root_level(sb) >= BTRFS_MAX_LEVEL) {
 		btrfs_err(fs_info, "tree_root level too big: %d >= %d",
-				btrfs_super_root_level(sb), BTRFS_MAX_LEVEL);
+				btrfs_stack_super_root_level(sb), BTRFS_MAX_LEVEL);
 		ret = -EINVAL;
 	}
 	if (btrfs_super_chunk_root_level(sb) >= BTRFS_MAX_LEVEL) {
