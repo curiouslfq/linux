@@ -2163,7 +2163,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_backup_extent_root, struct btrfs_root_backup,
 		   extent_root, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_backup_extent_root_gen, struct btrfs_root_backup,
 		   extent_root_gen, 64);
-BTRFS_SETGET_STACK_FUNCS(backup_extent_root_level, struct btrfs_root_backup,
+BTRFS_SETGET_STACK_FUNCS(stack_backup_extent_root_level, struct btrfs_root_backup,
 		   extent_root_level, 8);
 
 BTRFS_SETGET_STACK_FUNCS(backup_fs_root, struct btrfs_root_backup,
