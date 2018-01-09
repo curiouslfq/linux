@@ -1278,7 +1278,7 @@ struct btrfs_root *btrfs_create_tree(struct btrfs_trans_handle *trans,
 	root->root_item.flags = 0;
 	root->root_item.byte_limit = 0;
 	btrfs_set_root_bytenr(&root->root_item, leaf->start);
-	btrfs_set_root_generation(&root->root_item, trans->transid);
+	btrfs_set_stack_root_generation(&root->root_item, trans->transid);
 	btrfs_set_root_level(&root->root_item, 0);
 	btrfs_set_root_refs(&root->root_item, 1);
 	btrfs_set_root_used(&root->root_item, leaf->len);
@@ -1429,7 +1429,7 @@ static struct btrfs_root *btrfs_read_tree_root(struct btrfs_root *tree_root,
 		goto find_fail;
 	}
 
-	generation = btrfs_root_generation(&root->root_item);
+	generation = btrfs_stack_root_generation(&root->root_item);
 	root->node = read_tree_block(fs_info,
 				     btrfs_root_bytenr(&root->root_item),
 				     generation);

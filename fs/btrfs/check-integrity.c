@@ -1056,7 +1056,7 @@ leaf_item_out_of_bounce_error:
 						&sf->num_copies,
 						&sf->mirror_num,
 						disk_key,
-						btrfs_root_generation(
+						btrfs_stack_root_generation(
 						&root_item));
 				if (sf->error)
 					goto one_stack_frame_backwards;

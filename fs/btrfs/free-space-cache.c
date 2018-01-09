@@ -3482,7 +3482,7 @@ int load_free_ino_cache(struct btrfs_fs_info *fs_info, struct btrfs_root *root)
 	struct btrfs_path *path;
 	struct inode *inode;
 	int ret = 0;
-	u64 root_gen = btrfs_root_generation(&root->root_item);
+	u64 root_gen = btrfs_stack_root_generation(&root->root_item);
 
 	if (!btrfs_test_opt(fs_info, INODE_MAP_CACHE))
 		return 0;

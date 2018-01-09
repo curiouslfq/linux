@@ -615,7 +615,7 @@ struct btrfs_root *find_tree_root(struct reloc_control *rc,
 	BUG_ON(IS_ERR(root));
 
 	if (test_bit(BTRFS_ROOT_REF_COWS, &root->state) &&
-	    generation != btrfs_root_generation(&root->root_item))
+	    generation != btrfs_stack_root_generation(&root->root_item))
 		return NULL;
 
 	return root;
@@ -1437,7 +1437,7 @@ static struct btrfs_root *create_reloc_root(struct btrfs_trans_handle *trans,
 	memcpy(root_item, &root->root_item, sizeof(*root_item));
 	btrfs_set_root_bytenr(root_item, eb->start);
 	btrfs_set_root_level(root_item, btrfs_header_level(eb));
-	btrfs_set_root_generation(root_item, trans->transid);
+	btrfs_set_stack_root_generation(root_item, trans->transid);
 
 	if (root->root_key.objectid == objectid) {
 		btrfs_set_root_refs(root_item, 0);

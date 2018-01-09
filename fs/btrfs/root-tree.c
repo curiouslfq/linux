@@ -42,7 +42,7 @@ static void btrfs_read_root_item(struct extent_buffer *eb, int slot,
 			min_t(int, len, (int)sizeof(*item)));
 	if (len < sizeof(*item))
 		need_reset = 1;
-	if (!need_reset && btrfs_root_generation(item)
+	if (!need_reset && btrfs_stack_root_generation(item)
 		!= btrfs_root_generation_v2(item)) {
 		if (btrfs_root_generation_v2(item) != 0) {
 			btrfs_warn(eb->fs_info,
@@ -122,7 +122,7 @@ void btrfs_set_root_node(struct btrfs_root_item *item,
 {
 	btrfs_set_root_bytenr(item, node->start);
 	btrfs_set_root_level(item, btrfs_header_level(node));
-	btrfs_set_root_generation(item, btrfs_header_generation(node));
+	btrfs_set_stack_root_generation(item, btrfs_header_generation(node));
 }
 
 /*
@@ -197,7 +197,7 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
 	 * Update generation_v2 so at the next mount we know the new root
 	 * fields are valid.
 	 */
-	btrfs_set_root_generation_v2(item, btrfs_root_generation(item));
+	btrfs_set_root_generation_v2(item, btrfs_stack_root_generation(item));
 
 	write_extent_buffer(l, item, ptr, sizeof(*item));
 	btrfs_mark_buffer_dirty(path->nodes[0]);
@@ -212,7 +212,7 @@ int btrfs_insert_root(struct btrfs_trans_handle *trans, struct btrfs_root *root,
 	/*
 	 * Make sure generation v1 and v2 match. See update_root for details.
 	 */
-	btrfs_set_root_generation_v2(item, btrfs_root_generation(item));
+	btrfs_set_root_generation_v2(item, btrfs_stack_root_generation(item));
 	return btrfs_insert_item(trans, root, key, item, sizeof(*item));
 }
 
