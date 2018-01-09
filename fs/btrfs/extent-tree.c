@@ -10065,7 +10065,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
 		read_extent_buffer(leaf, &cache->item,
 				   btrfs_item_ptr_offset(leaf, path->slots[0]),
 				   sizeof(cache->item));
-		cache->flags = btrfs_block_group_flags(&cache->item);
+		cache->flags = btrfs_stack_block_group_flags(&cache->item);
 		if (!mixed &&
 		    ((cache->flags & BTRFS_BLOCK_GROUP_METADATA) &&
 		    (cache->flags & BTRFS_BLOCK_GROUP_DATA))) {
@@ -10228,7 +10228,7 @@ int btrfs_make_block_group(struct btrfs_trans_handle *trans,
 	btrfs_set_stack_block_group_used(&cache->item, bytes_used);
 	btrfs_set_stack_block_group_chunk_objectid(&cache->item,
 					     BTRFS_FIRST_CHUNK_TREE_OBJECTID);
-	btrfs_set_block_group_flags(&cache->item, type);
+	btrfs_set_stack_block_group_flags(&cache->item, type);
 
 	cache->flags = type;
 	cache->last_byte_to_unpin = (u64)-1;
