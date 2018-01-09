@@ -1554,7 +1554,7 @@ static noinline int create_pending_snapshot(struct btrfs_trans_handle *trans,
 		       sizeof(new_root_item->received_uuid));
 		memset(&new_root_item->stime, 0, sizeof(new_root_item->stime));
 		memset(&new_root_item->rtime, 0, sizeof(new_root_item->rtime));
-		btrfs_set_root_stransid(new_root_item, 0);
+		btrfs_set_stack_root_stransid(new_root_item, 0);
 		btrfs_set_root_rtransid(new_root_item, 0);
 	}
 	btrfs_set_stack_timespec_sec(&new_root_item->otime, cur_time.tv_sec);
