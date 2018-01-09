@@ -905,7 +905,7 @@ again:
 
 		if (btrfs_root_level(&root->root_item) == cur->level) {
 			/* tree root */
-			ASSERT(btrfs_root_bytenr(&root->root_item) ==
+			ASSERT(btrfs_stack_root_bytenr(&root->root_item) ==
 			       cur->bytenr);
 			if (should_ignore_root(root))
 				list_add(&cur->list, &useless);
@@ -947,7 +947,7 @@ again:
 		need_check = true;
 		for (; level < BTRFS_MAX_LEVEL; level++) {
 			if (!path2->nodes[level]) {
-				ASSERT(btrfs_root_bytenr(&root->root_item) ==
+				ASSERT(btrfs_stack_root_bytenr(&root->root_item) ==
 				       lower->bytenr);
 				if (should_ignore_root(root))
 					list_add(&lower->list, &useless);
@@ -1435,7 +1435,7 @@ static struct btrfs_root *create_reloc_root(struct btrfs_trans_handle *trans,
 	}
 
 	memcpy(root_item, &root->root_item, sizeof(*root_item));
-	btrfs_set_root_bytenr(root_item, eb->start);
+	btrfs_set_stack_root_bytenr(root_item, eb->start);
 	btrfs_set_root_level(root_item, btrfs_header_level(eb));
 	btrfs_set_stack_root_generation(root_item, trans->transid);
 

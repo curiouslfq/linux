@@ -1131,7 +1131,7 @@ static int update_cowonly_root(struct btrfs_trans_handle *trans,
 	old_root_used = btrfs_root_used(&root->root_item);
 
 	while (1) {
-		old_root_bytenr = btrfs_root_bytenr(&root->root_item);
+		old_root_bytenr = btrfs_stack_root_bytenr(&root->root_item);
 		if (old_root_bytenr == root->node->start &&
 		    old_root_used == btrfs_root_used(&root->root_item))
 			break;

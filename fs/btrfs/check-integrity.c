@@ -1041,7 +1041,7 @@ leaf_item_out_of_bounce_error:
 					sf->block_ctx, &root_item,
 					root_item_offset,
 					item_size);
-				next_bytenr = btrfs_root_bytenr(&root_item);
+				next_bytenr = btrfs_stack_root_bytenr(&root_item);
 
 				sf->error =
 				    btrfsic_create_link_to_next_block(
