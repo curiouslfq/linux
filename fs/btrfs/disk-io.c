@@ -1958,7 +1958,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 
 	btrfs_set_stack_backup_total_bytes(root_backup,
 			     btrfs_super_total_bytes(info->super_copy));
-	btrfs_set_backup_bytes_used(root_backup,
+	btrfs_set_stack_backup_bytes_used(root_backup,
 			     btrfs_super_bytes_used(info->super_copy));
 	btrfs_set_backup_num_devices(root_backup,
 			     btrfs_super_num_devices(info->super_copy));
@@ -2013,7 +2013,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	btrfs_set_super_root(super, btrfs_stack_backup_tree_root(root_backup));
 	btrfs_set_super_root_level(super,
 				   btrfs_stack_backup_tree_root_level(root_backup));
-	btrfs_set_super_bytes_used(super, btrfs_backup_bytes_used(root_backup));
+	btrfs_set_super_bytes_used(super, btrfs_stack_backup_bytes_used(root_backup));
 
 	/*
 	 * fixme: the total bytes and num_devices need to match or we should

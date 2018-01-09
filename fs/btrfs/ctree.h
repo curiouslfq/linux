@@ -2188,7 +2188,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_backup_csum_root_level, struct btrfs_root_backup,
 		   csum_root_level, 8);
 BTRFS_SETGET_STACK_FUNCS(stack_backup_total_bytes, struct btrfs_root_backup,
 		   total_bytes, 64);
-BTRFS_SETGET_STACK_FUNCS(backup_bytes_used, struct btrfs_root_backup,
+BTRFS_SETGET_STACK_FUNCS(stack_backup_bytes_used, struct btrfs_root_backup,
 		   bytes_used, 64);
 BTRFS_SETGET_STACK_FUNCS(backup_num_devices, struct btrfs_root_backup,
 		   num_devices, 64);
