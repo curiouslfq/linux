@@ -3923,9 +3923,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 				btrfs_stack_super_chunk_root_level(sb), BTRFS_MAX_LEVEL);
 		ret = -EINVAL;
 	}
-	if (btrfs_super_log_root_level(sb) >= BTRFS_MAX_LEVEL) {
+	if (btrfs_stack_super_log_root_level(sb) >= BTRFS_MAX_LEVEL) {
 		btrfs_err(fs_info, "log_root level too big: %d >= %d",
-				btrfs_super_log_root_level(sb), BTRFS_MAX_LEVEL);
+				btrfs_stack_super_log_root_level(sb), BTRFS_MAX_LEVEL);
 		ret = -EINVAL;
 	}
 

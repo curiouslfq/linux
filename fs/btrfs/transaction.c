@@ -2237,7 +2237,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
 	update_super_roots(fs_info);
 
 	btrfs_set_stack_super_log_root(fs_info->super_copy, 0);
-	btrfs_set_super_log_root_level(fs_info->super_copy, 0);
+	btrfs_set_stack_super_log_root_level(fs_info->super_copy, 0);
 	memcpy(fs_info->super_for_commit, fs_info->super_copy,
 	       sizeof(*fs_info->super_copy));
 
