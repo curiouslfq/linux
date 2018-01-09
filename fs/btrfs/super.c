@@ -2106,7 +2106,7 @@ static int btrfs_statfs(struct dentry *dentry, struct kstatfs *buf)
 
 	rcu_read_unlock();
 
-	buf->f_blocks = div_u64(btrfs_super_total_bytes(disk_super), factor);
+	buf->f_blocks = div_u64(btrfs_stack_super_total_bytes(disk_super), factor);
 	buf->f_blocks >>= bits;
 	buf->f_bfree = buf->f_blocks - (div_u64(total_used, factor) >> bits);
 

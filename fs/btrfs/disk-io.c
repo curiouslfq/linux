@@ -1957,7 +1957,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 			       btrfs_header_level(info->csum_root->node));
 
 	btrfs_set_stack_backup_total_bytes(root_backup,
-			     btrfs_super_total_bytes(info->super_copy));
+			     btrfs_stack_super_total_bytes(info->super_copy));
 	btrfs_set_stack_backup_bytes_used(root_backup,
 			     btrfs_super_bytes_used(info->super_copy));
 	btrfs_set_stack_backup_num_devices(root_backup,
@@ -2019,7 +2019,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	 * fixme: the total bytes and num_devices need to match or we should
 	 * need a fsck
 	 */
-	btrfs_set_super_total_bytes(super, btrfs_stack_backup_total_bytes(root_backup));
+	btrfs_set_stack_super_total_bytes(super, btrfs_stack_backup_total_bytes(root_backup));
 	btrfs_set_super_num_devices(super, btrfs_stack_backup_num_devices(root_backup));
 	return 0;
 }

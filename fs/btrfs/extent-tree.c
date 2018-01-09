@@ -4495,7 +4495,7 @@ static int should_alloc_chunk(struct btrfs_fs_info *fs_info,
 	 * about 1% of the FS size.
 	 */
 	if (force == CHUNK_ALLOC_LIMITED) {
-		thresh = btrfs_super_total_bytes(fs_info->super_copy);
+		thresh = btrfs_stack_super_total_bytes(fs_info->super_copy);
 		thresh = max_t(u64, SZ_64M, div_factor_fine(thresh, 1));
 
 		if (sinfo->total_bytes - bytes_used < thresh)
@@ -10958,7 +10958,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *fs_info, struct fstrim_range *range)
 	u64 start;
 	u64 end;
 	u64 trimmed = 0;
-	u64 total_bytes = btrfs_super_total_bytes(fs_info->super_copy);
+	u64 total_bytes = btrfs_stack_super_total_bytes(fs_info->super_copy);
 	int ret = 0;
 
 	/*

@@ -2420,8 +2420,8 @@ int btrfs_init_new_device(struct btrfs_fs_info *fs_info, const char *device_path
 	if (!blk_queue_nonrot(q))
 		fs_info->fs_devices->rotating = 1;
 
-	tmp = btrfs_super_total_bytes(fs_info->super_copy);
-	btrfs_set_super_total_bytes(fs_info->super_copy,
+	tmp = btrfs_stack_super_total_bytes(fs_info->super_copy);
+	btrfs_set_stack_super_total_bytes(fs_info->super_copy,
 		round_down(tmp + device->total_bytes, fs_info->sectorsize));
 
 	tmp = btrfs_super_num_devices(fs_info->super_copy);
@@ -2695,7 +2695,7 @@ int btrfs_grow_device(struct btrfs_trans_handle *trans,
 	new_size = round_down(new_size, fs_info->sectorsize);
 
 	mutex_lock(&fs_info->chunk_mutex);
-	old_total = btrfs_super_total_bytes(super_copy);
+	old_total = btrfs_stack_super_total_bytes(super_copy);
 	diff = round_down(new_size - device->total_bytes, fs_info->sectorsize);
 
 	if (new_size <= device->total_bytes ||
@@ -2706,7 +2706,7 @@ int btrfs_grow_device(struct btrfs_trans_handle *trans,
 
 	fs_devices = fs_info->fs_devices;
 
-	btrfs_set_super_total_bytes(super_copy,
+	btrfs_set_stack_super_total_bytes(super_copy,
 			round_down(old_total + diff, fs_info->sectorsize));
 	device->fs_devices->total_rw_bytes += diff;
 
@@ -4373,7 +4373,7 @@ int btrfs_shrink_device(struct btrfs_device *device, u64 new_size)
 	struct extent_buffer *l;
 	struct btrfs_key key;
 	struct btrfs_super_block *super_copy = fs_info->super_copy;
-	u64 old_total = btrfs_super_total_bytes(super_copy);
+	u64 old_total = btrfs_stack_super_total_bytes(super_copy);
 	u64 old_size = btrfs_device_get_total_bytes(device);
 	u64 diff;
 
@@ -4505,7 +4505,7 @@ again:
 			      &fs_info->fs_devices->resized_devices);
 
 	WARN_ON(diff > old_total);
-	btrfs_set_super_total_bytes(super_copy,
+	btrfs_set_stack_super_total_bytes(super_copy,
 			round_down(old_total - diff, fs_info->sectorsize));
 	mutex_unlock(&fs_info->chunk_mutex);
 
@@ -6911,11 +6911,11 @@ int btrfs_read_chunk_tree(struct btrfs_fs_info *fs_info)
 		ret = -EINVAL;
 		goto error;
 	}
-	if (btrfs_super_total_bytes(fs_info->super_copy) <
+	if (btrfs_stack_super_total_bytes(fs_info->super_copy) <
 	    fs_info->fs_devices->total_rw_bytes) {
 		btrfs_err(fs_info,
 	"super_total_bytes %llu mismatch with fs_devices total_rw_bytes %llu",
-			  btrfs_super_total_bytes(fs_info->super_copy),
+			  btrfs_stack_super_total_bytes(fs_info->super_copy),
 			  fs_info->fs_devices->total_rw_bytes);
 		ret = -EINVAL;
 		goto error;
