@@ -9093,7 +9093,7 @@ int btrfs_drop_snapshot(struct btrfs_root *root,
 	if (block_rsv)
 		trans->block_rsv = block_rsv;
 
-	if (btrfs_disk_key_objectid(&root_item->drop_progress) == 0) {
+	if (btrfs_stack_disk_key_objectid(&root_item->drop_progress) == 0) {
 		level = btrfs_header_level(root->node);
 		path->nodes[level] = btrfs_lock_root_node(root);
 		btrfs_set_lock_blocking(path->nodes[level]);

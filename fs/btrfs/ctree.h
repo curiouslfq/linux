@@ -1985,7 +1985,7 @@ static inline void btrfs_set_free_space_key(struct extent_buffer *eb,
 }
 
 /* struct btrfs_disk_key */
-BTRFS_SETGET_STACK_FUNCS(disk_key_objectid, struct btrfs_disk_key,
+BTRFS_SETGET_STACK_FUNCS(stack_disk_key_objectid, struct btrfs_disk_key,
 			 objectid, 64);
 BTRFS_SETGET_STACK_FUNCS(disk_key_offset, struct btrfs_disk_key, offset, 64);
 BTRFS_SETGET_STACK_FUNCS(disk_key_type, struct btrfs_disk_key, type, 8);

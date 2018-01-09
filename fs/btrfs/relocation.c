@@ -2192,7 +2192,7 @@ static noinline_for_stack int merge_reloc_root(struct reloc_control *rc,
 	reloc_root = root->reloc_root;
 	root_item = &reloc_root->root_item;
 
-	if (btrfs_disk_key_objectid(&root_item->drop_progress) == 0) {
+	if (btrfs_stack_disk_key_objectid(&root_item->drop_progress) == 0) {
 		level = btrfs_root_level(root_item);
 		extent_buffer_get(reloc_root->node);
 		path->nodes[level] = reloc_root->node;

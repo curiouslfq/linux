@@ -863,19 +863,19 @@ static int btrfsic_process_superblock_dev_mirror(
 		tmp_disk_key.offset = 0;
 		switch (pass) {
 		case 0:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_ROOT_TREE_OBJECTID);
 			additional_string = "initial root ";
 			next_bytenr = btrfs_super_root(super_tmp);
 			break;
 		case 1:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_CHUNK_TREE_OBJECTID);
 			additional_string = "initial chunk ";
 			next_bytenr = btrfs_super_chunk_root(super_tmp);
 			break;
 		case 2:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_TREE_LOG_OBJECTID);
 			additional_string = "initial log ";
 			next_bytenr = btrfs_super_log_root(super_tmp);
@@ -1852,7 +1852,7 @@ again:
 			       btrfsic_get_block_type(state, block), bytenr,
 			       dev_state->name, dev_bytenr, block->mirror_num,
 			       block->generation,
-			       btrfs_disk_key_objectid(&block->disk_key),
+			       btrfs_stack_disk_key_objectid(&block->disk_key),
 			       block->disk_key.type,
 			       btrfs_disk_key_offset(&block->disk_key),
 			       btrfs_stack_header_generation(
@@ -2227,13 +2227,13 @@ static int btrfsic_process_written_superblock(
 		const char *additional_string = NULL;
 		struct btrfs_disk_key tmp_disk_key = {0};
 
-		btrfs_set_disk_key_objectid(&tmp_disk_key,
+		btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 					    BTRFS_ROOT_ITEM_KEY);
-		btrfs_set_disk_key_objectid(&tmp_disk_key, 0);
+		btrfs_set_stack_disk_key_objectid(&tmp_disk_key, 0);
 
 		switch (pass) {
 		case 0:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_ROOT_TREE_OBJECTID);
 			additional_string = "root ";
 			next_bytenr = btrfs_super_root(super_hdr);
@@ -2242,7 +2242,7 @@ static int btrfsic_process_written_superblock(
 				pr_info("root@%llu\n", next_bytenr);
 			break;
 		case 1:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_CHUNK_TREE_OBJECTID);
 			additional_string = "chunk ";
 			next_bytenr = btrfs_super_chunk_root(super_hdr);
@@ -2251,7 +2251,7 @@ static int btrfsic_process_written_superblock(
 				pr_info("chunk@%llu\n", next_bytenr);
 			break;
 		case 2:
-			btrfs_set_disk_key_objectid(&tmp_disk_key,
+			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_TREE_LOG_OBJECTID);
 			additional_string = "log ";
 			next_bytenr = btrfs_super_log_root(super_hdr);
