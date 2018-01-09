@@ -505,7 +505,7 @@ static noinline int create_subvol(struct inode *dir,
 				     fs_info->nodesize);
 	btrfs_set_stack_inode_mode(inode_item, S_IFDIR | 0755);
 
-	btrfs_set_root_flags(root_item, 0);
+	btrfs_set_stack_root_flags(root_item, 0);
 	btrfs_set_root_limit(root_item, 0);
 	btrfs_set_stack_inode_flags(inode_item, BTRFS_INODE_ROOT_ITEM_INIT);
 
@@ -1795,9 +1795,9 @@ static noinline int btrfs_ioctl_subvol_setflags(struct file *file,
 	if (!!(flags & BTRFS_SUBVOL_RDONLY) == btrfs_root_readonly(root))
 		goto out_drop_sem;
 
-	root_flags = btrfs_root_flags(&root->root_item);
+	root_flags = btrfs_stack_root_flags(&root->root_item);
 	if (flags & BTRFS_SUBVOL_RDONLY) {
-		btrfs_set_root_flags(&root->root_item,
+		btrfs_set_stack_root_flags(&root->root_item,
 				     root_flags | BTRFS_ROOT_SUBVOL_RDONLY);
 	} else {
 		/*
@@ -1806,7 +1806,7 @@ static noinline int btrfs_ioctl_subvol_setflags(struct file *file,
 		 */
 		spin_lock(&root->root_item_lock);
 		if (root->send_in_progress == 0) {
-			btrfs_set_root_flags(&root->root_item,
+			btrfs_set_stack_root_flags(&root->root_item,
 				     root_flags & ~BTRFS_ROOT_SUBVOL_RDONLY);
 			spin_unlock(&root->root_item_lock);
 		} else {
@@ -1836,7 +1836,7 @@ static noinline int btrfs_ioctl_subvol_setflags(struct file *file,
 
 out_reset:
 	if (ret)
-		btrfs_set_root_flags(&root->root_item, root_flags);
+		btrfs_set_stack_root_flags(&root->root_item, root_flags);
 out_drop_sem:
 	up_write(&fs_info->subvol_sem);
 out_drop_write:
@@ -2418,9 +2418,9 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
 	 * again is not run concurrently.
 	 */
 	spin_lock(&dest->root_item_lock);
-	root_flags = btrfs_root_flags(&dest->root_item);
+	root_flags = btrfs_stack_root_flags(&dest->root_item);
 	if (dest->send_in_progress == 0) {
-		btrfs_set_root_flags(&dest->root_item,
+		btrfs_set_stack_root_flags(&dest->root_item,
 				root_flags | BTRFS_ROOT_SUBVOL_DEAD);
 		spin_unlock(&dest->root_item_lock);
 	} else {
@@ -2519,8 +2519,8 @@ out_up_write:
 	up_write(&fs_info->subvol_sem);
 	if (err) {
 		spin_lock(&dest->root_item_lock);
-		root_flags = btrfs_root_flags(&dest->root_item);
-		btrfs_set_root_flags(&dest->root_item,
+		root_flags = btrfs_stack_root_flags(&dest->root_item);
+		btrfs_set_stack_root_flags(&dest->root_item,
 				root_flags & ~BTRFS_ROOT_SUBVOL_DEAD);
 		spin_unlock(&dest->root_item_lock);
 	}

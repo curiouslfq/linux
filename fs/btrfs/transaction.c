@@ -1536,12 +1536,12 @@ static noinline int create_pending_snapshot(struct btrfs_trans_handle *trans,
 	memcpy(new_root_item, &root->root_item, sizeof(*new_root_item));
 	btrfs_check_and_init_root_item(new_root_item);
 
-	root_flags = btrfs_root_flags(new_root_item);
+	root_flags = btrfs_stack_root_flags(new_root_item);
 	if (pending->readonly)
 		root_flags |= BTRFS_ROOT_SUBVOL_RDONLY;
 	else
 		root_flags &= ~BTRFS_ROOT_SUBVOL_RDONLY;
-	btrfs_set_root_flags(new_root_item, root_flags);
+	btrfs_set_stack_root_flags(new_root_item, root_flags);
 
 	btrfs_set_root_generation_v2(new_root_item,
 			trans->transid);
