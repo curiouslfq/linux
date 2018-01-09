@@ -92,7 +92,7 @@ static void print_extent_item(struct extent_buffer *eb, int slot, int type)
 		btrfs_tree_block_key(eb, info, &key);
 		pr_info("\t\ttree block key (%llu %u %llu) level %d\n",
 		       btrfs_stack_disk_key_objectid(&key), key.type,
-		       btrfs_disk_key_offset(&key),
+		       btrfs_stack_disk_key_offset(&key),
 		       btrfs_tree_block_level(eb, info));
 		iref = (struct btrfs_extent_inline_ref *)(info + 1);
 	} else {

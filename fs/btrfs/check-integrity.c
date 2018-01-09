@@ -1854,7 +1854,7 @@ again:
 			       block->generation,
 			       btrfs_stack_disk_key_objectid(&block->disk_key),
 			       block->disk_key.type,
-			       btrfs_disk_key_offset(&block->disk_key),
+			       btrfs_stack_disk_key_offset(&block->disk_key),
 			       btrfs_stack_header_generation(
 				       (struct btrfs_header *) mapped_datav[0]),
 			       state->max_superblock_generation);
