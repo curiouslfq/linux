@@ -512,7 +512,7 @@ static noinline int create_subvol(struct inode *dir,
 	btrfs_set_stack_root_bytenr(root_item, leaf->start);
 	btrfs_set_stack_root_generation(root_item, trans->transid);
 	btrfs_set_stack_root_level(root_item, 0);
-	btrfs_set_root_refs(root_item, 1);
+	btrfs_set_stack_root_refs(root_item, 1);
 	btrfs_set_root_used(root_item, leaf->len);
 	btrfs_set_root_last_snapshot(root_item, 0);
 
@@ -836,7 +836,7 @@ static noinline int btrfs_mksubvol(const struct path *parent,
 
 	down_read(&fs_info->subvol_sem);
 
-	if (btrfs_root_refs(&BTRFS_I(dir)->root->root_item) == 0)
+	if (btrfs_stack_root_refs(&BTRFS_I(dir)->root->root_item) == 0)
 		goto out_up_read;
 
 	if (snap_src) {
@@ -2473,7 +2473,7 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
 	memset(&dest->root_item.drop_progress, 0,
 		sizeof(dest->root_item.drop_progress));
 	dest->root_item.drop_level = 0;
-	btrfs_set_root_refs(&dest->root_item, 0);
+	btrfs_set_stack_root_refs(&dest->root_item, 0);
 
 	if (!test_and_set_bit(BTRFS_ROOT_ORPHAN_ITEM_INSERTED, &dest->state)) {
 		ret = btrfs_insert_orphan_item(trans,

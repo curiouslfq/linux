@@ -4145,7 +4145,7 @@ static int btrfs_uuid_scan_kthread(void *data)
 		read_extent_buffer(eb, &root_item,
 				   btrfs_item_ptr_offset(eb, slot),
 				   (int)sizeof(root_item));
-		if (btrfs_root_refs(&root_item) == 0)
+		if (btrfs_stack_root_refs(&root_item) == 0)
 			goto skip;
 
 		if (!btrfs_is_empty_uuid(root_item.uuid) ||

@@ -1440,7 +1440,7 @@ static struct btrfs_root *create_reloc_root(struct btrfs_trans_handle *trans,
 	btrfs_set_stack_root_generation(root_item, trans->transid);
 
 	if (root->root_key.objectid == objectid) {
-		btrfs_set_root_refs(root_item, 0);
+		btrfs_set_stack_root_refs(root_item, 0);
 		memset(&root_item->drop_progress, 0,
 		       sizeof(struct btrfs_disk_key));
 		root_item->drop_level = 0;
@@ -1517,7 +1517,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
 	root_item = &reloc_root->root_item;
 
 	if (fs_info->reloc_ctl->merge_reloc_tree &&
-	    btrfs_root_refs(root_item) == 0) {
+	    btrfs_stack_root_refs(root_item) == 0) {
 		root->reloc_root = NULL;
 		__del_reloc_root(reloc_root);
 	}
@@ -2304,7 +2304,7 @@ out:
 		memset(&root_item->drop_progress, 0,
 		       sizeof(root_item->drop_progress));
 		root_item->drop_level = 0;
-		btrfs_set_root_refs(root_item, 0);
+		btrfs_set_stack_root_refs(root_item, 0);
 		btrfs_update_reloc_root(trans, root);
 	}
 
@@ -2377,7 +2377,7 @@ again:
 		 * knows it should resumes merging
 		 */
 		if (!err)
-			btrfs_set_root_refs(&reloc_root->root_item, 1);
+			btrfs_set_stack_root_refs(&reloc_root->root_item, 1);
 		btrfs_update_reloc_root(trans, root);
 
 		list_add(&reloc_root->root_list, &reloc_roots);
@@ -2435,7 +2435,7 @@ again:
 		reloc_root = list_entry(reloc_roots.next,
 					struct btrfs_root, root_list);
 
-		if (btrfs_root_refs(&reloc_root->root_item) > 0) {
+		if (btrfs_stack_root_refs(&reloc_root->root_item) > 0) {
 			root = read_fs_root(fs_info,
 					    reloc_root->root_key.offset);
 			BUG_ON(IS_ERR(root));
@@ -4453,7 +4453,7 @@ static noinline_for_stack int mark_garbage_root(struct btrfs_root *root)
 	memset(&root->root_item.drop_progress, 0,
 		sizeof(root->root_item.drop_progress));
 	root->root_item.drop_level = 0;
-	btrfs_set_root_refs(&root->root_item, 0);
+	btrfs_set_stack_root_refs(&root->root_item, 0);
 	ret = btrfs_update_root(trans, fs_info->tree_root,
 				&root->root_key, &root->root_item);
 
@@ -4520,7 +4520,7 @@ int btrfs_recover_relocation(struct btrfs_root *root)
 
 		list_add(&reloc_root->root_list, &reloc_roots);
 
-		if (btrfs_root_refs(&reloc_root->root_item) > 0) {
+		if (btrfs_stack_root_refs(&reloc_root->root_item) > 0) {
 			fs_root = read_fs_root(fs_info,
 					       reloc_root->root_key.offset);
 			if (IS_ERR(fs_root)) {
@@ -4571,7 +4571,7 @@ int btrfs_recover_relocation(struct btrfs_root *root)
 					struct btrfs_root, root_list);
 		list_del(&reloc_root->root_list);
 
-		if (btrfs_root_refs(&reloc_root->root_item) == 0) {
+		if (btrfs_stack_root_refs(&reloc_root->root_item) == 0) {
 			list_add_tail(&reloc_root->root_list,
 				      &rc->reloc_roots);
 			continue;
@@ -4750,7 +4750,7 @@ void btrfs_reloc_pre_snapshot(struct btrfs_pending_snapshot *pending,
 		return;
 
 	root = root->reloc_root;
-	BUG_ON(btrfs_root_refs(&root->root_item) == 0);
+	BUG_ON(btrfs_stack_root_refs(&root->root_item) == 0);
 	/*
 	 * relocation is in the stage of merging trees. the space
 	 * used by merging a reloc tree is twice the size of

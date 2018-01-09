@@ -276,7 +276,7 @@ int btrfs_find_orphan_roots(struct btrfs_fs_info *fs_info)
 		if (root) {
 			WARN_ON(!test_bit(BTRFS_ROOT_ORPHAN_ITEM_INSERTED,
 					  &root->state));
-			if (btrfs_root_refs(&root->root_item) == 0)
+			if (btrfs_stack_root_refs(&root->root_item) == 0)
 				btrfs_add_dead_root(root);
 			continue;
 		}
@@ -323,7 +323,7 @@ int btrfs_find_orphan_roots(struct btrfs_fs_info *fs_info)
 			break;
 		}
 
-		if (btrfs_root_refs(&root->root_item) == 0)
+		if (btrfs_stack_root_refs(&root->root_item) == 0)
 			btrfs_add_dead_root(root);
 	}
 

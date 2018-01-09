@@ -5461,7 +5461,7 @@ static int btrfs_log_inode_parent(struct btrfs_trans_handle *trans,
 		goto end_no_trans;
 	}
 
-	if (root != inode->root || btrfs_root_refs(&root->root_item) == 0) {
+	if (root != inode->root || btrfs_stack_root_refs(&root->root_item) == 0) {
 		ret = 1;
 		goto end_no_trans;
 	}

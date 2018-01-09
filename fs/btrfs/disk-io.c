@@ -1280,7 +1280,7 @@ struct btrfs_root *btrfs_create_tree(struct btrfs_trans_handle *trans,
 	btrfs_set_stack_root_bytenr(&root->root_item, leaf->start);
 	btrfs_set_stack_root_generation(&root->root_item, trans->transid);
 	btrfs_set_stack_root_level(&root->root_item, 0);
-	btrfs_set_root_refs(&root->root_item, 1);
+	btrfs_set_stack_root_refs(&root->root_item, 1);
 	btrfs_set_root_used(&root->root_item, leaf->len);
 	btrfs_set_root_last_snapshot(&root->root_item, 0);
 	btrfs_set_stack_root_dirid(&root->root_item, 0);
@@ -1580,7 +1580,7 @@ struct btrfs_root *btrfs_get_fs_root(struct btrfs_fs_info *fs_info,
 again:
 	root = btrfs_lookup_fs_root(fs_info, location->objectid);
 	if (root) {
-		if (check_ref && btrfs_root_refs(&root->root_item) == 0)
+		if (check_ref && btrfs_stack_root_refs(&root->root_item) == 0)
 			return ERR_PTR(-ENOENT);
 		return root;
 	}
@@ -1589,7 +1589,7 @@ again:
 	if (IS_ERR(root))
 		return root;
 
-	if (check_ref && btrfs_root_refs(&root->root_item) == 0) {
+	if (check_ref && btrfs_stack_root_refs(&root->root_item) == 0) {
 		ret = -ENOENT;
 		goto fail;
 	}
@@ -2802,7 +2802,7 @@ retry_root_backup:
 
 	btrfs_set_root_node(&tree_root->root_item, tree_root->node);
 	tree_root->commit_root = btrfs_root_node(tree_root);
-	btrfs_set_root_refs(&tree_root->root_item, 1);
+	btrfs_set_stack_root_refs(&tree_root->root_item, 1);
 
 	mutex_lock(&tree_root->objectid_mutex);
 	ret = btrfs_find_highest_objectid(tree_root,
@@ -3578,7 +3578,7 @@ void btrfs_drop_and_free_fs_root(struct btrfs_fs_info *fs_info,
 			  (unsigned long)root->root_key.objectid);
 	spin_unlock(&fs_info->fs_roots_radix_lock);
 
-	if (btrfs_root_refs(&root->root_item) == 0)
+	if (btrfs_stack_root_refs(&root->root_item) == 0)
 		synchronize_srcu(&fs_info->subvol_srcu);
 
 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
@@ -3643,7 +3643,7 @@ int btrfs_cleanup_fs_roots(struct btrfs_fs_info *fs_info)
 
 		for (i = 0; i < ret; i++) {
 			/* Avoid to grab roots in dead_roots */
-			if (btrfs_root_refs(&gang[i]->root_item) == 0) {
+			if (btrfs_stack_root_refs(&gang[i]->root_item) == 0) {
 				gang[i] = NULL;
 				continue;
 			}

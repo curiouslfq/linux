@@ -3284,7 +3284,7 @@ void btrfs_orphan_commit_root(struct btrfs_trans_handle *trans,
 	spin_unlock(&root->orphan_lock);
 
 	if (test_bit(BTRFS_ROOT_ORPHAN_ITEM_INSERTED, &root->state) &&
-	    btrfs_root_refs(&root->root_item) > 0) {
+	    btrfs_stack_root_refs(&root->root_item) > 0) {
 		ret = btrfs_del_orphan_item(trans, fs_info->tree_root,
 					    root->root_key.objectid);
 		if (ret)
@@ -5265,7 +5265,7 @@ void btrfs_evict_inode(struct inode *inode)
 	evict_inode_truncate_pages(inode);
 
 	if (inode->i_nlink &&
-	    ((btrfs_root_refs(&root->root_item) != 0 &&
+	    ((btrfs_stack_root_refs(&root->root_item) != 0 &&
 	      root->root_key.objectid != BTRFS_ROOT_TREE_OBJECTID) ||
 	     btrfs_is_free_space_inode(BTRFS_I(inode))))
 		goto no_delete;
@@ -5287,7 +5287,7 @@ void btrfs_evict_inode(struct inode *inode)
 	}
 
 	if (inode->i_nlink > 0) {
-		BUG_ON(btrfs_root_refs(&root->root_item) != 0 &&
+		BUG_ON(btrfs_stack_root_refs(&root->root_item) != 0 &&
 		       root->root_key.objectid != BTRFS_ROOT_TREE_OBJECTID);
 		goto no_delete;
 	}
@@ -5581,7 +5581,7 @@ static void inode_tree_del(struct inode *inode)
 	}
 	spin_unlock(&root->inode_lock);
 
-	if (empty && btrfs_root_refs(&root->root_item) == 0) {
+	if (empty && btrfs_stack_root_refs(&root->root_item) == 0) {
 		synchronize_srcu(&fs_info->subvol_srcu);
 		spin_lock(&root->inode_lock);
 		empty = RB_EMPTY_ROOT(&root->inode_tree);
@@ -5601,7 +5601,7 @@ void btrfs_invalidate_inodes(struct btrfs_root *root)
 	u64 objectid = 0;
 
 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
-		WARN_ON(btrfs_root_refs(&root->root_item) != 0);
+		WARN_ON(btrfs_stack_root_refs(&root->root_item) != 0);
 
 	spin_lock(&root->inode_lock);
 again:
@@ -5809,7 +5809,7 @@ static int btrfs_dentry_delete(const struct dentry *dentry)
 
 	if (inode) {
 		root = BTRFS_I(inode)->root;
-		if (btrfs_root_refs(&root->root_item) == 0)
+		if (btrfs_stack_root_refs(&root->root_item) == 0)
 			return 1;
 
 		if (btrfs_ino(BTRFS_I(inode)) == BTRFS_EMPTY_SUBVOL_DIR_OBJECTID)
@@ -9547,7 +9547,7 @@ int btrfs_drop_inode(struct inode *inode)
 		return 1;
 
 	/* the snap/subvol tree is on deleting */
-	if (btrfs_root_refs(&root->root_item) == 0)
+	if (btrfs_stack_root_refs(&root->root_item) == 0)
 		return 1;
 	else
 		return generic_drop_inode(inode);
