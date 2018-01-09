@@ -5153,7 +5153,7 @@ static long _btrfs_ioctl_set_received_subvol(struct file *file,
 				    root->root_key.objectid);
 	memcpy(root_item->received_uuid, sa->uuid, BTRFS_UUID_SIZE);
 	btrfs_set_stack_root_stransid(root_item, sa->stransid);
-	btrfs_set_root_rtransid(root_item, sa->rtransid);
+	btrfs_set_stack_root_rtransid(root_item, sa->rtransid);
 	btrfs_set_stack_timespec_sec(&root_item->stime, sa->stime.sec);
 	btrfs_set_stack_timespec_nsec(&root_item->stime, sa->stime.nsec);
 	btrfs_set_stack_timespec_sec(&root_item->rtime, sa->rtime.sec);

@@ -2131,7 +2131,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_root_otransid, struct btrfs_root_item,
 			 otransid, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_root_stransid, struct btrfs_root_item,
 			 stransid, 64);
-BTRFS_SETGET_STACK_FUNCS(root_rtransid, struct btrfs_root_item,
+BTRFS_SETGET_STACK_FUNCS(stack_root_rtransid, struct btrfs_root_item,
 			 rtransid, 64);
 
 static inline bool btrfs_root_readonly(const struct btrfs_root *root)
