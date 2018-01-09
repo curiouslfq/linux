@@ -2282,7 +2282,7 @@ static int btrfs_replay_log(struct btrfs_fs_info *fs_info,
 	int ret;
 	struct btrfs_root *log_tree_root;
 	struct btrfs_super_block *disk_super = fs_info->super_copy;
-	u64 bytenr = btrfs_super_log_root(disk_super);
+	u64 bytenr = btrfs_stack_super_log_root(disk_super);
 
 	if (fs_devices->rw_devices == 0) {
 		btrfs_warn(fs_info, "log replay required on RO media");
@@ -2924,7 +2924,7 @@ retry_root_backup:
 		btrfs_err(fs_info, "couldn't build ref tree");
 
 	/* do not make disk changes in broken FS or nologreplay is given */
-	if (btrfs_super_log_root(disk_super) != 0 &&
+	if (btrfs_stack_super_log_root(disk_super) != 0 &&
 	    !btrfs_test_opt(fs_info, NOLOGREPLAY)) {
 		ret = btrfs_replay_log(fs_info, fs_devices);
 		if (ret) {
@@ -3112,7 +3112,7 @@ recovery_tree_root:
 	free_root_pointers(fs_info, 0);
 
 	/* don't use the log in recovery mode, it won't be valid */
-	btrfs_set_super_log_root(disk_super, 0);
+	btrfs_set_stack_super_log_root(disk_super, 0);
 
 	/* we can't trust the free space cache either */
 	btrfs_set_opt(fs_info->mount_opt, CLEAR_CACHE);
@@ -3967,9 +3967,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 			   btrfs_stack_super_chunk_root(sb));
 		ret = -EINVAL;
 	}
-	if (!IS_ALIGNED(btrfs_super_log_root(sb), sectorsize)) {
+	if (!IS_ALIGNED(btrfs_stack_super_log_root(sb), sectorsize)) {
 		btrfs_warn(fs_info, "log_root block unaligned: %llu",
-			   btrfs_super_log_root(sb));
+			   btrfs_stack_super_log_root(sb));
 		ret = -EINVAL;
 	}
 

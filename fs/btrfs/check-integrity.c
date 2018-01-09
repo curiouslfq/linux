@@ -704,7 +704,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
 				pr_info("chunk@%llu\n", next_bytenr);
 			break;
 		case 2:
-			next_bytenr = btrfs_super_log_root(selected_super);
+			next_bytenr = btrfs_stack_super_log_root(selected_super);
 			if (0 == next_bytenr)
 				continue;
 			if (state->print_mask &
@@ -878,7 +878,7 @@ static int btrfsic_process_superblock_dev_mirror(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_TREE_LOG_OBJECTID);
 			additional_string = "initial log ";
-			next_bytenr = btrfs_super_log_root(super_tmp);
+			next_bytenr = btrfs_stack_super_log_root(super_tmp);
 			if (0 == next_bytenr)
 				continue;
 			break;
@@ -2254,7 +2254,7 @@ static int btrfsic_process_written_superblock(
 			btrfs_set_stack_disk_key_objectid(&tmp_disk_key,
 						    BTRFS_TREE_LOG_OBJECTID);
 			additional_string = "log ";
-			next_bytenr = btrfs_super_log_root(super_hdr);
+			next_bytenr = btrfs_stack_super_log_root(super_hdr);
 			if (0 == next_bytenr)
 				continue;
 			if (state->print_mask &

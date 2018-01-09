@@ -2967,7 +2967,7 @@ int btrfs_sync_log(struct btrfs_trans_handle *trans,
 	}
 	btrfs_wait_logged_extents(trans, log, log_transid);
 
-	btrfs_set_super_log_root(fs_info->super_for_commit,
+	btrfs_set_stack_super_log_root(fs_info->super_for_commit,
 				 log_root_tree->node->start);
 	btrfs_set_super_log_root_level(fs_info->super_for_commit,
 				       btrfs_header_level(log_root_tree->node));
