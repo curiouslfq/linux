@@ -1960,7 +1960,7 @@ static void backup_super_roots(struct btrfs_fs_info *info)
 			     btrfs_super_total_bytes(info->super_copy));
 	btrfs_set_stack_backup_bytes_used(root_backup,
 			     btrfs_super_bytes_used(info->super_copy));
-	btrfs_set_backup_num_devices(root_backup,
+	btrfs_set_stack_backup_num_devices(root_backup,
 			     btrfs_super_num_devices(info->super_copy));
 
 	/*
@@ -2020,7 +2020,7 @@ static noinline int next_root_backup(struct btrfs_fs_info *info,
 	 * need a fsck
 	 */
 	btrfs_set_super_total_bytes(super, btrfs_stack_backup_total_bytes(root_backup));
-	btrfs_set_super_num_devices(super, btrfs_backup_num_devices(root_backup));
+	btrfs_set_super_num_devices(super, btrfs_stack_backup_num_devices(root_backup));
 	return 0;
 }
 

@@ -2190,7 +2190,7 @@ BTRFS_SETGET_STACK_FUNCS(stack_backup_total_bytes, struct btrfs_root_backup,
 		   total_bytes, 64);
 BTRFS_SETGET_STACK_FUNCS(stack_backup_bytes_used, struct btrfs_root_backup,
 		   bytes_used, 64);
-BTRFS_SETGET_STACK_FUNCS(backup_num_devices, struct btrfs_root_backup,
+BTRFS_SETGET_STACK_FUNCS(stack_backup_num_devices, struct btrfs_root_backup,
 		   num_devices, 64);
 
 /* struct btrfs_balance_item */
