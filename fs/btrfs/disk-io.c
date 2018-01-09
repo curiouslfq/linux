@@ -2628,7 +2628,7 @@ int open_ctree(struct super_block *sb,
 		goto fail_alloc;
 
 	/* check FS state, whether FS is broken. */
-	if (btrfs_super_flags(disk_super) & BTRFS_SUPER_FLAG_ERROR)
+	if (btrfs_stack_super_flags(disk_super) & BTRFS_SUPER_FLAG_ERROR)
 		set_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state);
 
 	/*
@@ -3529,8 +3529,8 @@ int write_all_supers(struct btrfs_fs_info *fs_info, int max_mirrors)
 		memcpy(dev_item->uuid, dev->uuid, BTRFS_UUID_SIZE);
 		memcpy(dev_item->fsid, dev->fs_devices->fsid, BTRFS_FSID_SIZE);
 
-		flags = btrfs_super_flags(sb);
-		btrfs_set_super_flags(sb, flags | BTRFS_HEADER_FLAG_WRITTEN);
+		flags = btrfs_stack_super_flags(sb);
+		btrfs_set_stack_super_flags(sb, flags | BTRFS_HEADER_FLAG_WRITTEN);
 
 		ret = write_dev_supers(dev, sb, max_mirrors);
 		if (ret)
@@ -3910,9 +3910,9 @@ static int btrfs_check_super_valid(struct btrfs_fs_info *fs_info)
 		btrfs_err(fs_info, "no valid FS found");
 		ret = -EINVAL;
 	}
-	if (btrfs_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP)
+	if (btrfs_stack_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP)
 		btrfs_warn(fs_info, "unrecognized super flag: %llu",
-				btrfs_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP);
+				btrfs_stack_super_flags(sb) & ~BTRFS_SUPER_FLAG_SUPP);
 	if (btrfs_super_root_level(sb) >= BTRFS_MAX_LEVEL) {
 		btrfs_err(fs_info, "tree_root level too big: %d >= %d",
 				btrfs_super_root_level(sb), BTRFS_MAX_LEVEL);

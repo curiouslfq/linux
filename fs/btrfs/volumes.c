@@ -996,7 +996,7 @@ static int __btrfs_open_devices(struct btrfs_fs_devices *fs_devices,
 		    device->generation > latest_dev->generation)
 			latest_dev = device;
 
-		if (btrfs_super_flags(disk_super) & BTRFS_SUPER_FLAG_SEEDING) {
+		if (btrfs_stack_super_flags(disk_super) & BTRFS_SUPER_FLAG_SEEDING) {
 			device->writeable = 0;
 		} else {
 			device->writeable = !bdev_read_only(bdev);
@@ -2223,9 +2223,9 @@ static int btrfs_prepare_sprout(struct btrfs_fs_info *fs_info)
 	memcpy(disk_super->fsid, fs_devices->fsid, BTRFS_FSID_SIZE);
 	mutex_unlock(&fs_info->fs_devices->device_list_mutex);
 
-	super_flags = btrfs_super_flags(disk_super) &
+	super_flags = btrfs_stack_super_flags(disk_super) &
 		      ~BTRFS_SUPER_FLAG_SEEDING;
-	btrfs_set_super_flags(disk_super, super_flags);
+	btrfs_set_stack_super_flags(disk_super, super_flags);
 
 	return 0;
 }
