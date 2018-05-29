@@ -4353,8 +4353,7 @@ static int btrfs_uuid_scan_kthread(void *data)
 		}
 update_tree:
 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
-			ret = btrfs_uuid_tree_add(trans, fs_info,
-						  root_item.uuid,
+			ret = btrfs_uuid_tree_add(trans, root_item.uuid,
 						  BTRFS_UUID_KEY_SUBVOL,
 						  key.objectid);
 			if (ret < 0) {
@@ -4365,7 +4364,7 @@ update_tree:
 		}
 
 		if (!btrfs_is_empty_uuid(root_item.received_uuid)) {
-			ret = btrfs_uuid_tree_add(trans, fs_info,
+			ret = btrfs_uuid_tree_add(trans,
 						  root_item.received_uuid,
 						 BTRFS_UUID_KEY_RECEIVED_SUBVOL,
 						  key.objectid);
