@@ -542,6 +542,45 @@ int btrfs_is_empty_uuid(u8 *uuid)
 	return 1;
 }
 
+static int btrfs_link_subvol(struct btrfs_trans_handle *trans,
+			     struct inode *dir, u64 objectid, const char *name,
+			     int namelen)
+{
+	struct btrfs_root *root = BTRFS_I(dir)->root;
+	struct btrfs_key key;
+	u64 index = 0;
+	int ret;
+
+	/*
+	 * insert the directory item
+	 */
+	ret = btrfs_set_inode_index(BTRFS_I(dir), &index);
+	if (ret) {
+		btrfs_abort_transaction(trans, ret);
+		return ret;
+	}
+
+	key.objectid = objectid;
+	key.type = BTRFS_ROOT_ITEM_KEY;
+	key.offset = -1;
+	ret = btrfs_insert_dir_item(trans, name, namelen, BTRFS_I(dir), &key,
+				    BTRFS_FT_DIR, index);
+	if (ret) {
+		btrfs_abort_transaction(trans, ret);
+		return ret;
+	}
+
+	btrfs_i_size_write(BTRFS_I(dir), dir->i_size + namelen * 2);
+	ret = btrfs_update_inode(trans, root, dir);
+	BUG_ON(ret);
+
+	ret = btrfs_add_root_ref(trans, objectid, root->root_key.objectid,
+				 btrfs_ino(BTRFS_I(dir)), index, name, namelen);
+	BUG_ON(ret);
+
+	return ret;
+}
+
 static noinline int create_subvol(struct inode *dir,
 				  struct dentry *dentry,
 				  const char *name, int namelen,
@@ -563,7 +602,6 @@ static noinline int create_subvol(struct inode *dir,
 	int err;
 	u64 objectid;
 	u64 new_dirid = BTRFS_FIRST_FREE_OBJECTID;
-	u64 index = 0;
 	uuid_le new_uuid;
 
 	root_item = kzalloc(sizeof(*root_item), GFP_KERNEL);
@@ -677,29 +715,9 @@ static noinline int create_subvol(struct inode *dir,
 	new_root->highest_objectid = new_dirid;
 	mutex_unlock(&new_root->objectid_mutex);
 
-	/*
-	 * insert the directory item
-	 */
-	ret = btrfs_set_inode_index(BTRFS_I(dir), &index);
-	if (ret) {
-		btrfs_abort_transaction(trans, ret);
+	ret = btrfs_link_subvol(trans, dir, objectid, name, namelen);
+	if (ret)
 		goto fail;
-	}
-
-	ret = btrfs_insert_dir_item(trans, name, namelen, BTRFS_I(dir), &key,
-				    BTRFS_FT_DIR, index);
-	if (ret) {
-		btrfs_abort_transaction(trans, ret);
-		goto fail;
-	}
-
-	btrfs_i_size_write(BTRFS_I(dir), dir->i_size + namelen * 2);
-	ret = btrfs_update_inode(trans, root, dir);
-	BUG_ON(ret);
-
-	ret = btrfs_add_root_ref(trans, objectid, root->root_key.objectid,
-				 btrfs_ino(BTRFS_I(dir)), index, name, namelen);
-	BUG_ON(ret);
 
 	ret = btrfs_uuid_tree_add(trans, root_item->uuid,
 				  BTRFS_UUID_KEY_SUBVOL, objectid);
