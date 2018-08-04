@@ -816,6 +816,11 @@ struct btrfs_ioctl_get_subvol_rootref_args {
 		__u8 align[7];
 };
 
+struct btrfs_ioctl_subvol_undelete_args {
+	__u64 subvol_id;
+	char name[BTRFS_PATH_NAME_MAX + 1];
+};
+
 /* Error codes as returned by the kernel */
 enum btrfs_err_code {
 	BTRFS_ERROR_DEV_RAID1_MIN_NOT_MET = 1,
@@ -940,5 +945,7 @@ enum btrfs_err_code {
 				struct btrfs_ioctl_get_subvol_rootref_args)
 #define BTRFS_IOC_INO_LOOKUP_USER _IOWR(BTRFS_IOCTL_MAGIC, 62, \
 				struct btrfs_ioctl_ino_lookup_user_args)
+#define BTRFS_IOC_SUBVOL_UNDELETE _IOWR(BTRFS_IOCTL_MAGIC, 63, \
+				struct btrfs_ioctl_subvol_undelete_args)
 
 #endif /* _UAPI_LINUX_BTRFS_H */
