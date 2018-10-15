@@ -29,8 +29,6 @@
 #include "qgroup.h"
 #include "ref-verify.h"
 
-#undef SCRAMBLE_DELAYED_REFS
-
 /*
  * control flags for do_chunk_alloc's force field
  * CHUNK_ALLOC_NO_FORCE means to only allocate a chunk
@@ -2667,7 +2665,7 @@ static noinline int __btrfs_run_delayed_refs(struct btrfs_trans_handle *trans,
 	return 0;
 }
 
-#ifdef SCRAMBLE_DELAYED_REFS
+#ifdef CONFIG_BTRFS_DEBUG
 /*
  * Normally delayed refs get processed in ascending bytenr order. This
  * correlates in most cases to the order added. To expose dependencies on this
@@ -2925,7 +2923,7 @@ int btrfs_run_delayed_refs(struct btrfs_trans_handle *trans,
 		count = atomic_read(&delayed_refs->num_entries) * 2;
 
 again:
-#ifdef SCRAMBLE_DELAYED_REFS
+#ifdef CONFIG_BTRFS_DEBUG
 	delayed_refs->run_delayed_start = find_middle(&delayed_refs->root);
 #endif
 	trans->can_flush_pending_bgs = false;
