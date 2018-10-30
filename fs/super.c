@@ -436,6 +436,7 @@ bool trylock_super(struct super_block *sb)
 void generic_shutdown_super(struct super_block *sb)
 {
 	const struct super_operations *sop = sb->s_op;
+	struct inode *inode, *next;
 
 	if (sb->s_root) {
 		shrink_dcache_for_umount(sb);
@@ -454,6 +455,12 @@ void generic_shutdown_super(struct super_block *sb)
 
 		if (sop->put_super)
 			sop->put_super(sb);
+
+		spin_lock(&sb->s_inode_list_lock);
+		list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list)
+			pr_info("Luke: inode %lu count %u survive after evict_inodes\n",
+					inode->i_ino, atomic_read(&inode->i_count));
+		spin_unlock(&sb->s_inode_list_lock);
 
 		if (!list_empty(&sb->s_inodes)) {
 			printk("VFS: Busy inodes after unmount of %s. "

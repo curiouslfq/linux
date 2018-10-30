@@ -612,8 +612,11 @@ void evict_inodes(struct super_block *sb)
 again:
 	spin_lock(&sb->s_inode_list_lock);
 	list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list) {
-		if (atomic_read(&inode->i_count))
+		if (atomic_read(&inode->i_count)) {
+			pr_info("Luke: evict_inodes: busy inode %lu count %u\n",
+					inode->i_ino, atomic_read(&inode->i_count));
 			continue;
+		}
 
 		spin_lock(&inode->i_lock);
 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
