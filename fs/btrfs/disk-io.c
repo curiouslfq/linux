@@ -1714,8 +1714,6 @@ static int cleaner_kthread(void *arg)
 		 */
 		btrfs_delete_unused_bgs(fs_info);
 sleep:
-		if (kthread_should_park())
-			kthread_parkme();
 		if (kthread_should_stop())
 			return 0;
 		if (!again) {
@@ -3904,7 +3902,7 @@ void close_ctree(struct btrfs_fs_info *fs_info)
 	int ret;
 
 	set_bit(BTRFS_FS_CLOSING_START, &fs_info->flags);
-	kthread_park(fs_info->cleaner_kthread);
+	kthread_stop(fs_info->cleaner_kthread);
 
 	/* wait for the qgroup rescan worker to stop */
 	btrfs_qgroup_wait_for_completion(fs_info, false);
@@ -3948,7 +3946,6 @@ void close_ctree(struct btrfs_fs_info *fs_info)
 		btrfs_error_commit_super(fs_info);
 
 	kthread_stop(fs_info->transaction_kthread);
-	kthread_stop(fs_info->cleaner_kthread);
 
 	ASSERT(list_empty(&fs_info->delayed_iputs));
 	set_bit(BTRFS_FS_CLOSING_DONE, &fs_info->flags);
